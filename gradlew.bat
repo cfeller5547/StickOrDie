@@ -13,6 +13,7 @@
 @rem See the License for the specific language governing permissions and
 @rem limitations under the License.
 @rem
+@rem comment by peter
 
 @if "%DEBUG%" == "" @echo off
 @rem ##########################################################################
