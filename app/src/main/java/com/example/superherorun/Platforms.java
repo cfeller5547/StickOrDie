@@ -18,6 +18,7 @@ public class Platforms {
 
     private int x;
     private int y;
+    private boolean isInView;
 
     private Bitmap bitmap;
 
@@ -31,6 +32,7 @@ public class Platforms {
 
         x = xLocation;//randLocation.nextInt(maxX) - bitmap.getWidth();
         y = screenY;
+        isInView=false;
 
     }
 
@@ -47,9 +49,6 @@ public class Platforms {
         return 78;
     }
 
-
-
-
      static public int BitmapHeight(){
          /*Random rand = new Random();
          rand.setSeed(System.currentTimeMillis());
@@ -57,17 +56,19 @@ public class Platforms {
          int upperBound = 800;
          int result = rand.nextInt(upperBound-lowerBound) + lowerBound;*/
 
-
-        return 600;
+        return 400;
     }
 
+    // getters and setters
     public void setY(int y) {
         this.y = y;
     }
+    public int getY(){return y; }
 
-    public int getY(){
-        return y;
+    public void setInView(boolean y) {
+        this.isInView = y;
     }
+    public boolean getInView(){return this.isInView; }
 
     public void setX(int x) {
         this.x = x;
@@ -79,7 +80,6 @@ public class Platforms {
 
     public int getX()
     {
-        //Log.d("PFC::getX", "getX = "+x);
         return x;
     }
 
@@ -88,13 +88,6 @@ public class Platforms {
         return bitmap;
 
     }
-
-    /*public void LogPlatformInfo() {
-        Log.d("PLATFORMS::getX", "getX = "+getX());
-        Log.d("PLATFORMS::BitmapHeight", "BitmapHeight = "+BitmapHeight());
-    }*/
-
-
 
 
     }

@@ -23,10 +23,11 @@ public class PlatformCollection {
 
     private Paint paint;
     private Platforms[] plats;
-    public int platformCount = 6;
+    public int maxPlatformCount = 10;
+    public int platformCount = 0;
     private Rect rect;
     private int randScreenLocation;
-    private int nextYSpawn;
+
     private int speed = 3;
     private int maxX;
     private int minX;
@@ -36,11 +37,11 @@ public class PlatformCollection {
     private Character character;
     private GameView gameview;
     private Handler h;
-    private boolean readyForNextSpawn;
+    private Platforms activePlatform;
+    // Platform that is currently moving into view
+    private int prevActivePlatformIndex=-1;
+    private int currActivePlatformIndex=-1;
 
-    static int count = 0;
-    static int initialYStored;
-    static int initialYStoredStored;
 
     PlatformCollection(Context context, int screenX, int screenY, Character c) {
 
@@ -52,7 +53,7 @@ public class PlatformCollection {
         minY = 0;
 
 
-        plats = new Platforms[platformCount];
+        plats = new Platforms[maxPlatformCount];
 
 //        character.setWidth(200*Constants.SCREEN_WIDTH/1080);
 //        character.setHeight(200*Constants.SCREEN_HEIGHT/1920);
@@ -63,50 +64,19 @@ public class PlatformCollection {
 //        character.setArrBms(arrBms);
 
 
-        for (int i = 0; i < platformCount; i++) {
+        for (int i = 0; i < maxPlatformCount; i++) {
             plats[i] = new Platforms(context, screenX, screenY, getNextX());
-
         }
-
+        SpawnPlatform(0);
+        currActivePlatformIndex = 0;
+        prevActivePlatformIndex = 0;
 
         paint = new Paint();
         paint.setColor(Color.GREEN);
     }
 
-    public void move() {
-
-        //decreasing y coordinate so that enemy will move bottom to top
-        //LogPlatformInfo()
-    for (int i = 0; i < platformCount; i++) { //setting i to 1 as test
-
-        plats[i].setY((int) plats[i].getY() + speed);
-        //Log.d("PFC::move", "Called here: plats[i].setY((int) plats[i].getY() + Speed); = " + plats[i].getY());
-        //Log.d("PFC::move", " after setting, plats.getY() = " + plats[i].getY());
-        //Log.d("PFC::move", " current index i = " + i);
-        //Log.d("PFC::move", " maxY = " + maxY);
-
-        //Log.d("PFC::move", " Platforms.BitmapWidth() = " + Platforms.BitmapWidth());
-
-        //if the enemy reaches the bottom of screen
-        if (plats[i].getY() > maxY - BitmapWidth()) {
-            //adding the enemy again to the top of screen
-            //Log.d("PFC::move", " ENEMY REACHED TOP OF SCREEN HERE");
 
 
-            plats[i].setX(getNextX());
-
-
-            plats[i].setY(getNextY()); //fix here we no longer want it to be random
-
-            Log.d("PFC::move", " plats[i].setY(getNextY) = " + plats[i].getY());
-
-
-
-            plats[i].setBitmap(Bitmap.createScaledBitmap(plats[i].getBitmap(), BitmapWidth(), BitmapHeight(), false));
-
-        }
-    }
-}
 
 
     public void movePlatformCollection() {
@@ -121,50 +91,105 @@ public class PlatformCollection {
         return Math.abs(num1 - num2);
     }
 
-    public int getNextY() {
-        final int initialY = RandGenerator();
-        int difference1;
-        int difference2;
-        int temp = 0;
 
-        count++;
+    public int getNextAvailablePlatformIndex() {
+        for (int i = 0; i < platformCount; i++) {
+            if (!plats[i].getInView()){
+                return i;
+            }
+        }
+        // all platforms were in view
+        platformCount++;
+        if (platformCount>=maxPlatformCount)
+        {
+            return -1;
+        }
+        return platformCount-1;
+    }
 
-        if (count == 1) {
-            initialYStored = initialY;
-            return initialY;
-        }
-        else if(count == 2) {
-            do {
-                nextYSpawn = RandGenerator();
-                difference1 = difference(initialYStored,nextYSpawn);
-            }while(!fallsBetweenConditions(difference1));
-            initialYStoredStored = initialYStored; //storing initial into second before initial gets changed
-            initialYStored = nextYSpawn;
-            return nextYSpawn;
-        }
-        else{
-            do{
-                nextYSpawn = RandGenerator();
-                difference1  = difference(initialYStored, nextYSpawn);
-                difference2 = difference(initialYStoredStored, nextYSpawn);
-            }while(!(fallsBetweenConditions(difference1) && fallsBetweenConditions(difference2))); //why is it freezing here,
-            initialYStoredStored = initialYStored;
-            initialYStored = nextYSpawn;
-            return nextYSpawn;
+    public void LogPlatformsInView() {
+        for (int i = 0; i < platformCount; i++) {
+            Log.d("PFC::LogPlatformsInView", " i = " + i);
+            Log.d("PFC::LogPlatformsInView", " in View = " + plats[i].getInView());
         }
     }
 
-    public boolean reachedTopOfScreen(int i){
-            if (plats[i].getY() > Constants.SCREEN_HEIGHT) {
-                return true;
-            } else {
-                return false;
+
+    public void move() { //since we automatically start with 1 in constructor shouldnt i start at 1 here
+
+        // figure out active platform
+        for (int i = 0; i < platformCount; i++) {
+            int platFormHeight=plats[i].getBitmap().getHeight();
+            int platformY1=plats[i].getY();
+            int platformY2=platformY1+platFormHeight;
+
+            if (platformY2 >= 0 && platformY1<0){
+                currActivePlatformIndex=i; //why is this not zero it should be zero the first time we go in,
+                                            // we created a platform at index 0
+            }
+
+            plats[i].setInView(platformY1>=0 && (platformY1<maxY && platformY2<maxY));
+            // log data
+            Log.d("PFC::move", " i = " + i);
+            Log.d("PFC::move", " platformCount = " + platformCount);
+            Log.d("PFC::move", " platFormHeight = " + platFormHeight);
+            Log.d("PFC::move", " platformY1 = " + platformY1);
+            Log.d("PFC::move", " platformY2 = " + platformY2);
+        }
+        LogPlatformsInView();
+        Log.d("PFC::move", " currActivePlatformIndex = " + currActivePlatformIndex);
+        Log.d("PFC::move", " prevActivePlatformIndex = " + prevActivePlatformIndex);
+        // figure out if the active platform has changed
+        if (currActivePlatformIndex != prevActivePlatformIndex)
+        {
+            int nextIndex = getNextAvailablePlatformIndex();
+            Log.d("PFC::move", " THE active platform has changed - spawn the next platform");
+            Log.d("PFC::move", " nextIndex = " + nextIndex);
+            if (nextIndex != -1) {
+                // it changed - need to create the next platform
+                SpawnPlatform(nextIndex);
             }
         }
 
+        //decreasing y coordinate so that enemy will move bottom to top
+        //LogPlatformInfo()
+        for (int i = 0; i < platformCount; i++) { //setting i to 1 as test
+
+            movePlatformDown(i);
+
+         }
+        prevActivePlatformIndex = currActivePlatformIndex;
+    }
+
+
+
+    public void movePlatformDown(int i){
+   //     platformCounter = i;
+
+        plats[i].setY((int) plats[i].getY() + speed);
+
+    }
+
+    public void SpawnPlatform(int i){
+        plats[i].setY(minY - BitmapHeight());
+        plats[i].setX(getNextX());
+        plats[i].setBitmap(Bitmap.createScaledBitmap(plats[i].getBitmap(), BitmapWidth(), BitmapHeight(), false));
+        platformCount++;
+    }
+
+    public boolean activePlatformIsInView(){
+        if(activePlatform.getY() == BitmapHeight()){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+
 
     public boolean fallsBetweenConditions(int num){
-        if(num >= 300 && num <= 600){
+        if(num >= 200 && num <= 300){
             return true;
         }
         else{
@@ -183,25 +208,6 @@ public class PlatformCollection {
            num = rand.nextInt(upperBound - lowerBound) + lowerBound;
 
         return num;
-    }
-
-
-    public int getGap(int theRandomNum){
-       int spawnGap = 0;
-
-        for(int i = 1; i < platformCount; i++) {// i counts to 3 then stays at 3
-
-                if (plats[i] != null) {
-                    spawnGap = (plats[i].getY() - plats[i -1].getY());
-                    Log.d("PFC::getSpawnGap", " current index i = " + i);
-
-                    Log.d("PFC::getSpawnGap", " plats[i].getY = " + plats[i].getY());
-                    Log.d("PFC::getSpawnGap", " plats[i-1].getY = " + plats[i-1].getY());
-                }
-                Log.d("PFC::getSpawnGap", "spawnGap = " + Math.abs(spawnGap));
-            }
-
-        return Math.abs(spawnGap);
     }
 
 
@@ -290,27 +296,6 @@ public class PlatformCollection {
 
 }
 
-
-
-
-
-   /* public void move(int charSpeed) {
-        //decreasing y coordinate so that enemy will move bottom to top
-        for(int i=0; i < platformCount; i++) {
-            y -= charSpeed;
-            y -= speed;
-            //if the enemy reaches the top of screen
-            if (y < minY - bitmap.getHeight()) {
-                //adding the enemy again to the bottom of screen
-                Random generator = new Random();
-                speed = 5;
-                x = generator.nextInt(maxX) - bitmap.getWidth();
-                ;
-                y = maxY;
-            }
-        }
-    }
-*/
 
 
 
