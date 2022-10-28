@@ -18,7 +18,8 @@ public class Platforms {
 
     private int x;
     private int y;
-    private boolean isInView;
+    private boolean isFullyInView;
+    private boolean isPartiallyInView;
 
     private Bitmap bitmap;
 
@@ -32,7 +33,8 @@ public class Platforms {
 
         x = xLocation;//randLocation.nextInt(maxX) - bitmap.getWidth();
         y = screenY;
-        isInView=false;
+        isFullyInView=false;
+        isPartiallyInView=false;
 
     }
 
@@ -65,10 +67,15 @@ public class Platforms {
     }
     public int getY(){return y; }
 
-    public void setInView(boolean y) {
-        this.isInView = y;
+    public void setFullyInView(boolean y) {
+        this.isFullyInView = y;
     }
-    public boolean getInView(){return this.isInView; }
+    public void setPartiallyInView(boolean y) {
+        this.isPartiallyInView = y;
+    }
+    public boolean getInView(){return this.isFullyInView || this.isPartiallyInView; }
+    public boolean getFullyInView(){return this.isFullyInView; }
+    public boolean getPartiallyInView(){return this.isPartiallyInView; }
 
     public void setX(int x) {
         this.x = x;
