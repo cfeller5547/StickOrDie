@@ -20,22 +20,16 @@ public class Platforms {
     private int y;
     private boolean isFullyInView;
     private boolean isPartiallyInView;
-
     private Bitmap bitmap;
-
-
 
     Platforms(Context context, int screenX, int screenY, int xLocation){
         //we gonna need make this universal
-
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.platform1);
         bitmap = Bitmap.createScaledBitmap(getBitmap(), BitmapWidth(), BitmapHeight(), false);
-
         x = xLocation;
         y = screenY;
         isFullyInView=false;
         isPartiallyInView=false;
-
     }
 
     public int RandGenerator(){
@@ -46,6 +40,7 @@ public class Platforms {
         int num = rand.nextInt(upperBound-lowerBound) + lowerBound;
         return num;
     }
+
     static public int BitmapWidth()
     {
         return 78;
@@ -57,11 +52,9 @@ public class Platforms {
          int lowerBound = 500;
          int upperBound = 800;
          int result = rand.nextInt(upperBound-lowerBound) + lowerBound;*/
-
         return 400;
     }
 
-    // getters and setters
     public void setY(int y) {
         this.y = y;
     }
@@ -73,8 +66,11 @@ public class Platforms {
     public void setPartiallyInView(boolean y) {
         this.isPartiallyInView = y;
     }
+
     public boolean getInView(){return this.isFullyInView || this.isPartiallyInView; }
+
     public boolean getFullyInView(){return this.isFullyInView; }
+
     public boolean getPartiallyInView(){return this.isPartiallyInView; }
 
     public void setX(int x) {
@@ -91,13 +87,11 @@ public class Platforms {
     }
 
     public Bitmap getBitmap() {
-
         return bitmap;
-
     }
 
 
-    }
+}
 
 
 

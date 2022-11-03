@@ -34,8 +34,6 @@ public class PlatformCollection {
     private int minY;
     private Bitmap bitmap;
     private Character character;
-    private Platforms activePlatform;
-
     private int prevActivePlatformIndex=-1;
     // Platform that is currently moving into view
     private int currActivePlatformIndex=-1;
@@ -49,16 +47,13 @@ public class PlatformCollection {
         minX = 0;
         minY = 0;
         plats = new Platforms[maxPlatformCount];
-
         for (int i = 0; i < maxPlatformCount; i++) {
             plats[i] = new Platforms(context, screenX, screenY, getNextX());
         }
         SpawnPlatform(0);
-
         paint = new Paint();
         paint.setColor(Color.GREEN);
     }
-
 
     /*public void movePlatformCollection() {
 
@@ -74,7 +69,6 @@ public class PlatformCollection {
             }
         }
         // all platforms were in view
-        //platformCount++;
         if (platformCount>=maxPlatformCount)
         {
             return -1;
@@ -91,12 +85,10 @@ public class PlatformCollection {
 
 
     public void move() {
-
         // figure out active platform
         for (int i = 0; i < platformCount; i++) {
             plats[i].setFullyInView(false);
             plats[i].setPartiallyInView(false);
-
             int platFormHeight=plats[i].getBitmap().getHeight();
             int platformY1=plats[i].getY();
             int platformY2=platformY1+platFormHeight;
@@ -133,11 +125,9 @@ public class PlatformCollection {
                     // it changed - need to create the next platform
                     SpawnPlatform(nextIndex);
                 }
-
                 prevActivePlatformIndex = currActivePlatformIndex;
             }
         }
-
         for (int i = 0; i < platformCount; i++) {
             if (plats[i].getY() < maxY) {
                 movePlatformDown(i);
@@ -152,7 +142,6 @@ public class PlatformCollection {
     public void movePlatformDown(int i){
         plats[i].setY(plats[i].getY() + this.speed); //11 because it counts number of platforms as 10
                                                         //then it adds a speed of 1
-
         Log.d("PFC::movePlatformDown", "current index = " + i);
         //Log.d("PFC::movePlatformDown", "speed = " + speed);
         Log.d("PFC::movePlatformDown", "plats[i].setY((int) plats[i].getY() + speed) = "+plats[i].getY());
@@ -162,12 +151,10 @@ public class PlatformCollection {
         plats[i].setY(minY - BitmapHeight());
         plats[i].setX(getNextX());
         plats[i].setBitmap(Bitmap.createScaledBitmap(plats[i].getBitmap(), BitmapWidth(), BitmapHeight(), false));
-//        platformCount++;
     }
 
     public int RandGenerator(){
-        int num = 0;
-        
+            int num = 0;
            Random rand = new Random();
            rand.setSeed(System.currentTimeMillis());
            int lowerBound = -2000;
@@ -177,9 +164,7 @@ public class PlatformCollection {
         return num;
     }
 
-
     public void draw(Canvas canvas){
-
         for(int i = 0; i < platformCount; i++) {
             bitmap = plats[i].getBitmap();
             canvas.drawBitmap(bitmap, plats[i].getX(), plats[i].getY(), null);

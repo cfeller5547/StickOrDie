@@ -42,21 +42,15 @@ public class GameView extends View {
 
     public GameView(Context context, int screenX, int screenY) {
         super(context);
-
         gameMusic = MediaPlayer.create(context,R.raw.growingonme);
         gameMusic.start();
         playerJumpSound = MediaPlayer.create(context, R.raw.playerjump);
-
         paint = new Paint();
         paint.setTextSize(128);
         paint.setColor(Color.RED);
-
         character = new Character();
         platformCollection = new PlatformCollection(context, screenX, screenY, character);
-
         random = new Random();
-
-
         character.setWidth(200*Constants.SCREEN_WIDTH/1080);
         character.setHeight(200*Constants.SCREEN_HEIGHT/1920);
         character.setX(400*Constants.SCREEN_WIDTH/1080);
@@ -64,17 +58,11 @@ public class GameView extends View {
         bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.character);
         bm = Bitmap.createScaledBitmap(bm, character.getWidth(), character.getHeight(), false);
         character.setBm(bm);
-
-
-
         this.screenX = screenX;
         this.screenY = screenY;
         screenRatioX = 1920f / screenX;
         screenRatioY = 1080f / screenY;
 
-
-
-        //character.setArrBms(arrBms);
         handler = new Handler();
         r = new Runnable() {
             @Override
@@ -83,18 +71,14 @@ public class GameView extends View {
                 invalidate();
                 update();
 
-
                 }
-            //}
         };
     }
 
     public void draw(Canvas canvas){
         super.draw(canvas);
-
         character.draw(canvas);
         platformCollection.draw(canvas);
-
         canvas.drawText(score + "", screenX / 2f, 164, paint);
 
         handler.postDelayed(r, 1);
@@ -109,22 +93,20 @@ public class GameView extends View {
         }
     }
 
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-
         switch(event.getAction()){
             case MotionEvent.ACTION_DOWN:
-
                 if(playerClicked == false) {
-//                    playerClicked = true;
                     if (event.getX() < screenX / 2) { //left side of screen
                         character.setMoveX(-15); //moves left in x direction
                         playerStartedMovingLeft = true;
+                        playerStartedMovingRight = false;
                         playerClicked = true;
                     } else if (event.getX() > screenX / 2) { //right side of screen
                         character.setMoveX(+15); //moves right in x direction
                         playerStartedMovingRight = true;
+                        playerStartedMovingLeft = false;
                         playerClicked = true;
                     }
                 }
@@ -134,9 +116,7 @@ public class GameView extends View {
     }
 
     public void update(){
-
         platformCollection.move();
-
         score++;
 
         for (int i = 0; i < platformCollection.platformCount; i++) {
@@ -146,24 +126,19 @@ public class GameView extends View {
                 platformCollisionIndex = i;
                 character.setMoveX(0);
                 playerJumpedAndCollided = true;
-
             }
             if(playerJumpedAndCollided == true && playerClicked == false){
                 if(platformCollection.platformMovedBelowCharacter(platformCollisionIndex)){ //the platform that collided with character has moved below the character
                     Log.d("GameView::update", " platform has moved below character");
                     continueMovingX(); //platform falls off screen in direction it was previously moving
-
                 }
             }
-
             if(Rect.intersects(character.getRect(), platformCollection.getRect(i)) && platformCollection.characterTopIsTouchingPlatformBottom(platformCollisionIndex)){
+                playerClicked = false;
                 character.setMoveX(0);
                 character.setMoveY(platformCollection.getPlatformSpeed());
             }
-
-
         }
-
         if(character.x < 0 - character.getBm().getWidth() ||
                 character.x > screenX - character.getBm().getWidth()){
             isGameOver = true;
@@ -188,7 +163,6 @@ public class GameView extends View {
     public Canvas getCanvas(){
         return canvasRetriever;
     }
-
     public static void stopMusic(){
         gameMusic.stop();
     }

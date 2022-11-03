@@ -9,10 +9,7 @@ public class BaseObject {
     private Bitmap bm;
     protected Rect rect;
 
-
-    public BaseObject() {
-
-    }
+    public BaseObject(){}
 
     public BaseObject(Bitmap bm, int x, int y, int width, int height){
         this.bm = bm;
@@ -20,7 +17,6 @@ public class BaseObject {
         this.y = y;
         this.width = width;
         this.height = height;
-
     }
 
     public int getX() {
@@ -43,7 +39,6 @@ public class BaseObject {
         this.y = y;
     }
 
-    //protected Bitmap createImageAt(int row, int col){}
     public int getWidth() {
         return width;
     }
