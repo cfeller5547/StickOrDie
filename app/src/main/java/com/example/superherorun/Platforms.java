@@ -31,7 +31,7 @@ public class Platforms {
         bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.platform1);
         bitmap = Bitmap.createScaledBitmap(getBitmap(), BitmapWidth(), BitmapHeight(), false);
 
-        x = xLocation;//randLocation.nextInt(maxX) - bitmap.getWidth();
+        x = xLocation;
         y = screenY;
         isFullyInView=false;
         isPartiallyInView=false;

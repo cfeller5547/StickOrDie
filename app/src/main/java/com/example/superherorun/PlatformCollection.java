@@ -27,16 +27,13 @@ public class PlatformCollection {
     public int platformCount = maxPlatformCount;
     private Rect rect;
     private int randScreenLocation;
-
-    private int speed = 3;
+    private int speed = 4;
     private int maxX;
     private int minX;
     private int maxY;
     private int minY;
     private Bitmap bitmap;
     private Character character;
-    private GameView gameview;
-    private Handler h;
     private Platforms activePlatform;
 
     private int prevActivePlatformIndex=-1;
@@ -46,24 +43,12 @@ public class PlatformCollection {
 
     PlatformCollection(Context context, int screenX, int screenY, Character c) {
 
-
         this.character = c;
         maxX = screenX;
         maxY = screenY;
         minX = 0;
         minY = 0;
-
-
         plats = new Platforms[maxPlatformCount];
-
-//        character.setWidth(200*Constants.SCREEN_WIDTH/1080);
-//        character.setHeight(200*Constants.SCREEN_HEIGHT/1920);
-//        character.setX(400*Constants.SCREEN_WIDTH/1080);
-//        character.setY(Constants.SCREEN_HEIGHT/2-character.getHeight()/2);
-//        ArrayList<Bitmap> arrBms = new ArrayList<>();
-//        arrBms.add(BitmapFactory.decodeResource(context.getResources(), R.drawable.character));
-//        character.setArrBms(arrBms);
-
 
         for (int i = 0; i < maxPlatformCount; i++) {
             plats[i] = new Platforms(context, screenX, screenY, getNextX());
@@ -75,18 +60,12 @@ public class PlatformCollection {
     }
 
 
-    public void movePlatformCollection() {
+    /*public void movePlatformCollection() {
 
-        //updating the enemy coordinate with respect to player speed
-        for(int i=0; i<=platformCount; i++){
+        for(int i=0; i<platformCount; i++){
             move();
         }
-    }
-
-    public int difference(int num1, int num2){
-        return Math.abs(num1 - num2);
-    }
-
+    }*/
 
     public int getNextAvailablePlatformIndex() {
         for (int i = 0; i < platformCount; i++) {
@@ -103,12 +82,12 @@ public class PlatformCollection {
         return platformCount;
     }
 
-    public void LogPlatformsInView() {
+  /*  public void LogPlatformsInView() {
         for (int i = 0; i < platformCount; i++) {
             Log.d("PFC::LogPlatformsInView", " i = " + i);
             Log.d("PFC::LogPlatformsInView", " in View = " + plats[i].getInView());
         }
-    }
+    }*/
 
 
     public void move() {
@@ -133,23 +112,23 @@ public class PlatformCollection {
                 plats[i].setPartiallyInView(partiallyinView);
             }
             // log data
-            Log.d("PFC::move", " i = " + i);
+       /*     Log.d("PFC::move", " i = " + i);
             Log.d("PFC::move", " platformCount = " + platformCount);
             Log.d("PFC::move", " platFormHeight = " + platFormHeight);
             Log.d("PFC::move", " platformY1 = " + platformY1);
-            Log.d("PFC::move", " platformY2 = " + platformY2);
+            Log.d("PFC::move", " platformY2 = " + platformY2);*/
         }
 
-        LogPlatformsInView();
+       /* LogPlatformsInView();
         Log.d("PFC::move", " currActivePlatformIndex = " + currActivePlatformIndex);
-        Log.d("PFC::move", " prevActivePlatforIndex = " + prevActivePlatformIndex);
+        Log.d("PFC::move", " prevActivePlatforIndex = " + prevActivePlatformIndex);*/
         // figure out if the active platform has changedm
         if (currActivePlatformIndex != prevActivePlatformIndex) //it has changed
         {
             if (plats[currActivePlatformIndex].getFullyInView() == true) {
                 int nextIndex = getNextAvailablePlatformIndex();
-                Log.d("PFC::move", " THE active platform has changed - spawn the next platform");
-                Log.d("PFC::move", " nextIndex = " + nextIndex);
+                /*Log.d("PFC::move", " THE active platform has changed - spawn the next platform");
+                Log.d("PFC::move", " nextIndex = " + nextIndex);*/
                 if (nextIndex != -1) { //not max platforms reached
                     // it changed - need to create the next platform
                     SpawnPlatform(nextIndex);
@@ -166,8 +145,17 @@ public class PlatformCollection {
          }
     }
 
+    public int getPlatformSpeed(){
+            return this.speed;
+    }
+
     public void movePlatformDown(int i){
-        plats[i].setY((int) plats[i].getY() + speed);
+        plats[i].setY(plats[i].getY() + this.speed); //11 because it counts number of platforms as 10
+                                                        //then it adds a speed of 1
+
+        Log.d("PFC::movePlatformDown", "current index = " + i);
+        //Log.d("PFC::movePlatformDown", "speed = " + speed);
+        Log.d("PFC::movePlatformDown", "plats[i].setY((int) plats[i].getY() + speed) = "+plats[i].getY());
     }
 
     public void SpawnPlatform(int i){
@@ -176,16 +164,6 @@ public class PlatformCollection {
         plats[i].setBitmap(Bitmap.createScaledBitmap(plats[i].getBitmap(), BitmapWidth(), BitmapHeight(), false));
 //        platformCount++;
     }
-
-    public boolean activePlatformIsInView(){
-        if(activePlatform.getY() == BitmapHeight()){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-
 
     public int RandGenerator(){
         int num = 0;
@@ -216,6 +194,10 @@ public class PlatformCollection {
             return rect;
     }
 
+    public int getRectBottom(int i){
+        return this.getRect(i).bottom;
+    }
+
     /*public void LogPlatformInfo() {
         for(int i = 0; i < platformCount; i++) {
             Platforms temp = plats[i];
@@ -224,6 +206,30 @@ public class PlatformCollection {
     }*/
 
 
+    public boolean platformMovedBelowCharacter(int i) {
+        if (plats[i] != null) {
+            if (character.getY2() < plats[i].getY()) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    public boolean characterTopIsTouchingPlatformBottom(int i){
+        if(plats[i] != null){
+            if(this.getRectBottom(i) == (character.getRectTop() + 1) || this.getRectBottom(i) == (character.getRectTop() + 2)){
+                //setting to +1 and +2 until can figure out why collision is not at exact coordinates
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        return false;
+    }
 
     public boolean collides(int x){
 
@@ -271,7 +277,6 @@ public class PlatformCollection {
     public int getNextX() {
 
         Random random = new Random();
-        //int i=0;
         do {
             randScreenLocation = random.nextInt(Constants.SCREEN_WIDTH - BitmapWidth());
             //i++;

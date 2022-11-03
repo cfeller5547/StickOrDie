@@ -19,9 +19,8 @@ import java.util.Random;
 
 public class GameView extends View {
     private Character character;
-    private Platforms plat;
+    private Platforms platform;
     private PlatformCollection platformCollection;
-
     static MediaPlayer playerJumpSound;
     static MediaPlayer gameMusic;
     private boolean isPlaying = true;
@@ -32,14 +31,14 @@ public class GameView extends View {
     private Random random;
     private Paint paint;
     private Bitmap bm;
-
     private Handler handler;
     private Runnable r;
-
     private int screenX, screenY;
-
     public static float screenRatioX, screenRatioY;
-    int bound = 800;
+    private int platformCollisionIndex;
+    private boolean playerJumpedAndCollided = false;
+    private boolean playerStartedMovingLeft = false;
+    private boolean playerStartedMovingRight = false;
 
     public GameView(Context context, int screenX, int screenY) {
         super(context);
@@ -90,8 +89,6 @@ public class GameView extends View {
         };
     }
 
-
-
     public void draw(Canvas canvas){
         super.draw(canvas);
 
@@ -100,7 +97,7 @@ public class GameView extends View {
 
         canvas.drawText(score + "", screenX / 2f, 164, paint);
 
-        handler.postDelayed(r, 10);
+        handler.postDelayed(r, 1);
 
         if(isGameOver){
             canvas.drawText("Game Over", screenX / 4f, screenY / 2f, paint);
@@ -120,16 +117,15 @@ public class GameView extends View {
             case MotionEvent.ACTION_DOWN:
 
                 if(playerClicked == false) {
-                    playerClicked = true;
+//                    playerClicked = true;
                     if (event.getX() < screenX / 2) { //left side of screen
-                        playerJumpSound.start();
-                        character.setMove(-15);
-                        //Log.d("GameView::onTouchEvent", "Character x moved now");
-
+                        character.setMoveX(-15); //moves left in x direction
+                        playerStartedMovingLeft = true;
+                        playerClicked = true;
                     } else if (event.getX() > screenX / 2) { //right side of screen
-                        playerJumpSound.start();
-                        character.setMove(+15);
-                        //Log.d("GameView::onTouchEvent", "Character x moved now");
+                        character.setMoveX(+15); //moves right in x direction
+                        playerStartedMovingRight = true;
+                        playerClicked = true;
                     }
                 }
                 break;
@@ -139,23 +135,50 @@ public class GameView extends View {
 
     public void update(){
 
-        platformCollection.movePlatformCollection();
+        platformCollection.move();
 
         score++;
 
         for (int i = 0; i < platformCollection.platformCount; i++) {
 
             if (Rect.intersects(character.getRect(), platformCollection.getRect(i))) {
-                character.setMove(0); //is there a more dynamic way to make it that character stop
-                playerClicked = false;
-            }
-        }
+                playerClicked = false;//we set playerclicked to false after collision so he can move again
+                platformCollisionIndex = i;
+                character.setMoveX(0);
+                playerJumpedAndCollided = true;
 
+            }
+            if(playerJumpedAndCollided == true && playerClicked == false){
+                if(platformCollection.platformMovedBelowCharacter(platformCollisionIndex)){ //the platform that collided with character has moved below the character
+                    Log.d("GameView::update", " platform has moved below character");
+                    continueMovingX(); //platform falls off screen in direction it was previously moving
+
+                }
+            }
+
+            if(Rect.intersects(character.getRect(), platformCollection.getRect(i)) && platformCollection.characterTopIsTouchingPlatformBottom(platformCollisionIndex)){
+                character.setMoveX(0);
+                character.setMoveY(platformCollection.getPlatformSpeed());
+            }
+
+
+        }
 
         if(character.x < 0 - character.getBm().getWidth() ||
                 character.x > screenX - character.getBm().getWidth()){
             isGameOver = true;
+        }
+        if(character.getY() > Constants.SCREEN_HEIGHT){
+            isGameOver = true;
+        }
+    }
 
+    public void continueMovingX(){
+        if(playerStartedMovingRight == true){
+            character.setMoveX(15);
+        }
+        else{
+            character.setMoveX(-15);
         }
     }
 

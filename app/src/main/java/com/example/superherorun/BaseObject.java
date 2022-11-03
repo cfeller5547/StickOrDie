@@ -27,13 +27,16 @@ public class BaseObject {
         return x;
     }
 
-
     public void setX(int x) {
         this.x = x;
     }
 
-    public float getY() {
+    public int getY() {
         return y;
+    }
+
+    public int getY2(){
+        return getY() + getHeight();
     }
 
     public void setY(int y) {
@@ -67,6 +70,13 @@ public class BaseObject {
 
     public Rect getRect(){
         return new Rect((int)this.x, (int)this.y, (int)this.x+this.width,(int)this.y + this.height);
+    }
+    public int getRectTop(){
+        return this.getRect().top;
+    }
+
+    public int getRectBottom(){
+        return this.getRect().bottom;
     }
 
     public void setRect(Rect rect){

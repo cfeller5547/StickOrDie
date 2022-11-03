@@ -8,28 +8,34 @@ import java.util.ArrayList;
 public class Character extends BaseObject {
 
 
-    private int move;
+    private int moveX;
+    private int moveY;
 
     public Character() {
 
-        this.move = 0;
+        this.moveX = 0;
+        this.moveY = 0;
     }
 
-    public float getMove() {
-        return move;
+    public void setMoveX(int move) {
+        this.moveX = move;
     }
 
-    public void setMove(int move) {
-        this.move = move;
+    public void setMoveY(int move) {
+        this.moveY = move;
     }
 
     public void draw(Canvas canvas) {
-        move();
+        moveX();
+        moveY();
         canvas.drawBitmap(this.getBm(), this.x, this.y, null);
     }
 
-    private void move(){
-        this.x += this.move;
+    private void moveX(){
+        this.x += this.moveX;
+    }
+    private void moveY(){
+        this.y += this.moveY;
     }
 
 }
