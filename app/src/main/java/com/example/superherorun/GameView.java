@@ -39,6 +39,11 @@ public class GameView extends View {
     private boolean playerJumpedAndCollided = false;
     private boolean playerStartedMovingLeft = false;
     private boolean playerStartedMovingRight = false;
+    static int distanceCharRightToPlatformLeft;
+    static int distanceCharLeftToPlatformRight;
+    static int distanceCharRightToPlatformRight;
+    static int distanceCharTopToPlatformBottom;
+
 
     public GameView(Context context, int screenX, int screenY) {
         super(context);
@@ -103,11 +108,13 @@ public class GameView extends View {
                         playerStartedMovingLeft = true;
                         playerStartedMovingRight = false;
                         playerClicked = true;
+                        break;
                     } else if (event.getX() > screenX / 2) { //right side of screen
                         character.setMoveX(+15); //moves right in x direction
                         playerStartedMovingRight = true;
                         playerStartedMovingLeft = false;
                         playerClicked = true;
+                        break;
                     }
                 }
                 break;
@@ -120,10 +127,15 @@ public class GameView extends View {
         score++;
 
         for (int i = 0; i < platformCollection.platformCount; i++) {
+            distanceCharLeftToPlatformRight = difference(platformCollection.getRect(i).right,character.getRect().left);
+            distanceCharRightToPlatformLeft = difference(platformCollection.getRect(i).left, character.getRect().right);
+            distanceCharTopToPlatformBottom = difference(platformCollection.getRect(i).bottom, character.getRect().top);
 
             if (Rect.intersects(character.getRect(), platformCollection.getRect(i))) {
-                playerClicked = false;//we set playerclicked to false after collision so he can move again
+
                 platformCollisionIndex = i;
+                snapBack();
+                playerClicked = false;//we set playerclicked to false after collision so he can move again
                 character.setMoveX(0);
                 playerJumpedAndCollided = true;
             }
@@ -148,6 +160,25 @@ public class GameView extends View {
         }
     }
 
+    public void snapBack(){
+
+        if(smallestNum(distanceCharLeftToPlatformRight, distanceCharRightToPlatformLeft, distanceCharTopToPlatformBottom) == distanceCharLeftToPlatformRight){
+            character.setX(platformCollection.getRect(platformCollisionIndex).right);
+        }
+        if(smallestNum(distanceCharLeftToPlatformRight, distanceCharRightToPlatformLeft, distanceCharTopToPlatformBottom) == distanceCharRightToPlatformLeft){
+            character.setX(platformCollection.getRect(platformCollisionIndex).left - character.width);
+        }
+        if(smallestNum(distanceCharLeftToPlatformRight, distanceCharRightToPlatformLeft, distanceCharTopToPlatformBottom) == distanceCharTopToPlatformBottom){
+            character.setY(platformCollection.getRect(platformCollisionIndex).bottom);
+        }
+    }
+
+    public int smallestNum(int num1, int num2, int num3){
+        int s = Math.min(num1, num2);
+        s = Math.min(s, num3);
+        return s;
+    }
+
     public void continueMovingX(){
         if(playerStartedMovingRight == true){
             character.setMoveX(15);
@@ -157,6 +188,9 @@ public class GameView extends View {
         }
     }
 
+    public int difference(int var1, int var2){
+        return Math.abs(var2 - var1);
+    }
     public void setCanvas(Canvas canvas){
         this.canvasRetriever = canvas;
     }

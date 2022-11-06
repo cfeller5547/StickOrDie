@@ -27,7 +27,7 @@ public class PlatformCollection {
     public int platformCount = maxPlatformCount;
     private Rect rect;
     private int randScreenLocation;
-    private int speed = 4;
+    private int speed = 1;
     private int maxX;
     private int minX;
     private int maxY;
@@ -140,8 +140,7 @@ public class PlatformCollection {
     }
 
     public void movePlatformDown(int i){
-        plats[i].setY(plats[i].getY() + this.speed); //11 because it counts number of platforms as 10
-                                                        //then it adds a speed of 1
+        plats[i].setY(plats[i].getY() + this.speed);
         Log.d("PFC::movePlatformDown", "current index = " + i);
         //Log.d("PFC::movePlatformDown", "speed = " + speed);
         Log.d("PFC::movePlatformDown", "plats[i].setY((int) plats[i].getY() + speed) = "+plats[i].getY());

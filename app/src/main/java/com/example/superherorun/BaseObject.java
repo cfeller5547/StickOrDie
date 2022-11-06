@@ -27,6 +27,7 @@ public class BaseObject {
         this.x = x;
     }
 
+
     public int getY() {
         return y;
     }
