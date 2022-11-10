@@ -8,6 +8,11 @@
     android:background="@drawable/background"
     tools:context=".GameOverActivity">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/background" />
     <TextView
         android:id="@+id/gameOver"
         android:layout_width="match_parent"
@@ -27,12 +32,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/gameOver"
-        android:layout_centerHorizontal="true"
-        android:background="@color/teal_200"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="47dp"
+        android:background="@color/red"
+        android:fontFamily="@font/audiowide"
         android:padding="10dp"
         android:text="Play Again"
         android:textAlignment="center"
-        android:textSize="18sp"
+        android:textSize="24sp"
         android:textStyle="bold" />
 
     <TextView
@@ -41,10 +48,24 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+
         android:layout_marginBottom="174dp"
+        android:fontFamily="@font/audiowide"
         android:text="score"
         android:textColor="@color/black"
-        android:textSize="27sp" />
+        android:textSize="24sp" />
 
+    <TextView
+        android:id="@+id/highScoreLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/displayScore"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/audiowide"
+        android:text="High Score"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+
+        android:translationY="300px" />
 
 </RelativeLayout>

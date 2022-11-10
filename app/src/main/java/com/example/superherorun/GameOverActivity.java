@@ -2,7 +2,9 @@ package com.example.superherorun;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -11,20 +13,22 @@ import android.widget.TextView;
 
 public class GameOverActivity extends AppCompatActivity {
 
-
     private Button StartGameAgain;
-    private TextView DisplayScore;
-    private String score;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_game_over);
 
-        score = getIntent().getExtras().get("score").toString();
-
         StartGameAgain = (Button) findViewById(R.id.play_again_btn);
-        DisplayScore =  (TextView) findViewById(R.id.displayScore);
+
+        TextView highScoreLabel = (TextView) findViewById(R.id.highScoreLabel);
+        TextView scoreLabel = (TextView) findViewById(R.id.displayScore);
+        SharedPreferences settings = getSharedPreferences("GAME_DATA", Context.MODE_PRIVATE);
+        int highScore = settings.getInt("HIGH_SCORE", 0);
+        int score = getIntent().getIntExtra("SCORE", 0);
+        scoreLabel.setText("Score: " + score);
 
         StartGameAgain.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -34,7 +38,19 @@ public class GameOverActivity extends AppCompatActivity {
             }
         });
 
-        DisplayScore.setText("Score: " + score);
+
+
+        if(score > highScore){
+            highScoreLabel.setText("High Score: " + score);
+
+            //save
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putInt("HIGH_SCORE", score);
+            editor.commit();
+        }
+        else{
+            highScoreLabel.setText("High Score: " + highScore);
+        }
     }
 
 }

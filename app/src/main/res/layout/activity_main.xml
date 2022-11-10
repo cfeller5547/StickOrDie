@@ -6,12 +6,77 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:src="@drawable/background" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="60px"
+        android:layout_height="500px"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="34dp"
+        android:layout_marginTop="406dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/platform1" />
+
+    <ImageView
+        android:layout_width="200px"
+        android:layout_height="205px"
+        android:layout_centerInParent="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/character"
+        android:translationY="300px"
+        />
+
+    <ImageView
+        android:layout_width="60px"
+        android:layout_height="400px"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="79dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/platform1" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="60px"
+        android:layout_height="300px"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="343dp"
+        android:layout_marginTop="535dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/platform1" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="60px"
+        android:layout_height="600px"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="326dp"
+        android:layout_marginTop="190dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/platform1" />
+
+    <ImageView
+        android:id="@+id/imageView7"
+        android:layout_width="60px"
+        android:layout_height="250px"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="153dp"
+        android:layout_marginTop="229dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/platform1" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -21,7 +86,8 @@
         android:text="Stick or Die"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="#000000"
-        android:textSize="48sp" />
+        android:textSize="48sp"
+        android:translationY="-900px" />
 
     <TextView
         android:id="@+id/play"
@@ -32,18 +98,9 @@
         android:fontFamily="@font/audiowide"
         android:text="Play"
         android:textColor="#000000"
-        android:textSize="64sp" />
+        android:textSize="64sp"
+        android:translationY="-50dp" />
 
-    <TextView
-        android:id="@+id/txt_score"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:fontFamily="@font/audiowide"
-        android:text="0"
-        android:textColor="#002247"
-        android:textSize="50sp" />
 
 
 </RelativeLayout>

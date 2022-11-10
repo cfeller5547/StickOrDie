@@ -43,22 +43,25 @@ public class Platforms {
 
     static public int BitmapWidth()
     {
-        return 78;
+        return 60;
     }
 
      static public int BitmapHeight(){
-         /*Random rand = new Random();
+         Random rand = new Random();
          rand.setSeed(System.currentTimeMillis());
-         int lowerBound = 500;
+         int lowerBound = 200;
          int upperBound = 800;
-         int result = rand.nextInt(upperBound-lowerBound) + lowerBound;*/
-        return 400;
+         int result = rand.nextInt(upperBound-lowerBound) + lowerBound;
+        return result;
     }
 
     public void setY(int y) {
         this.y = y;
     }
     public int getY(){return y; }
+
+    public int Left() { return x;}
+    public int Right() { return Left() + bitmap.getWidth(); }
 
     public void setFullyInView(boolean y) {
         this.isFullyInView = y;
