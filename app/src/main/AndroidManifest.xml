@@ -16,7 +16,7 @@
 
         <activity
             android:name=".GameOverActivity"
-            android:exported="false"
+            android:exported="true"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".GameActivity"

@@ -17,8 +17,30 @@ public class Character extends BaseObject {
         this.moveY = 0;
     }
 
+    public boolean movingRight(){
+        int directionMoving = this.getMoveX();
+        if(directionMoving > 0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    public boolean movingLeft(){
+        int directionMoving = this.getMoveX();
+        if(directionMoving < 0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
     public void setMoveX(int move) {
         this.moveX = move;
+    }
+    public int getMoveX(){
+        return moveX;
     }
 
     public void setMoveY(int move) {

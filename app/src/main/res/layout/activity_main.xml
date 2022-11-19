@@ -1,80 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ImageView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/background" />
+        android:layout_height="match_parent" />
 
     <ImageView
         android:id="@+id/imageView6"
-        android:layout_width="60px"
-        android:layout_height="500px"
+        android:layout_width="@dimen/_16sdp"
+        android:layout_height="@dimen/_133sdp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="34dp"
-        android:layout_marginTop="406dp"
+        android:layout_marginStart="@dimen/_25sdp"
+        android:layout_marginTop="@dimen/_301sdp"
         android:scaleType="centerCrop"
         android:src="@drawable/platform1" />
 
     <ImageView
-        android:layout_width="200px"
-        android:layout_height="205px"
+        android:id="@+id/imageViewCharacter"
+        android:layout_width="@dimen/_53sdp"
+        android:layout_height="@dimen/_54sdp"
         android:layout_centerInParent="true"
-        android:scaleType="centerCrop"
+        android:scaleType="fitXY"
         android:src="@drawable/character"
-        android:translationY="300px"
-        />
+        android:translationY="@dimen/_80sdp" />
+
 
     <ImageView
-        android:layout_width="60px"
-        android:layout_height="400px"
+        android:layout_width="@dimen/_16sdp"
+        android:layout_height="@dimen/_133sdp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="79dp"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_58sdp"
         android:scaleType="centerCrop"
         android:src="@drawable/platform1" />
 
     <ImageView
         android:id="@+id/imageView3"
-        android:layout_width="60px"
-        android:layout_height="300px"
+        android:layout_width="@dimen/_16sdp"
+        android:layout_height="@dimen/_80sdp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_centerVertical="true"
-        android:layout_marginStart="343dp"
-        android:layout_marginTop="535dp"
+        android:layout_marginStart="@dimen/_254sdp"
+        android:layout_marginTop="@dimen/_396sdp"
         android:scaleType="centerCrop"
         android:src="@drawable/platform1" />
 
     <ImageView
         android:id="@+id/imageView5"
-        android:layout_width="60px"
-        android:layout_height="600px"
+        android:layout_width="@dimen/_16sdp"
+        android:layout_height="@dimen/_160sdp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_centerVertical="true"
-        android:layout_marginStart="326dp"
-        android:layout_marginTop="190dp"
+        android:layout_marginStart="@dimen/_242sdp"
+        android:layout_marginTop="@dimen/_141sdp"
         android:scaleType="centerCrop"
         android:src="@drawable/platform1" />
 
     <ImageView
         android:id="@+id/imageView7"
-        android:layout_width="60px"
-        android:layout_height="250px"
+        android:layout_width="@dimen/_16sdp"
+        android:layout_height="@dimen/_67sdp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_centerVertical="true"
-        android:layout_marginStart="153dp"
-        android:layout_marginTop="229dp"
+        android:layout_marginStart="@dimen/_113sdp"
+        android:layout_marginTop="@dimen/_170sdp"
         android:scaleType="centerCrop"
         android:src="@drawable/platform1" />
 
@@ -82,12 +80,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:layout_alignParentTop="true"
         android:fontFamily="@font/audiowide"
         android:text="Stick or Die"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="#000000"
-        android:textSize="48sp"
-        android:translationY="-900px" />
+        android:textSize="@dimen/_36ssp"
+        android:translationY="@dimen/_10sdp"
+         />
 
     <TextView
         android:id="@+id/play"
@@ -98,8 +98,8 @@
         android:fontFamily="@font/audiowide"
         android:text="Play"
         android:textColor="#000000"
-        android:textSize="64sp"
-        android:translationY="-50dp" />
+        android:textSize="@dimen/_47ssp"
+        android:translationY="@dimen/_minus37sdp" />
 
 
 

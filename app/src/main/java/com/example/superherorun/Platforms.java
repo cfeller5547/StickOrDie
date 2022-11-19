@@ -43,14 +43,14 @@ public class Platforms {
 
     static public int BitmapWidth()
     {
-        return 60;
+        return Math.round(Constants.SCREEN_WIDTH / 18f);//=60
     }
 
      static public int BitmapHeight(){
          Random rand = new Random();
          rand.setSeed(System.currentTimeMillis());
-         int lowerBound = 200;
-         int upperBound = 800;
+         int lowerBound = Math.round(Constants.SCREEN_HEIGHT/9.885f);//=200
+         int upperBound = Math.round(Constants.SCREEN_HEIGHT/2.47125f); //=800
          int result = rand.nextInt(upperBound-lowerBound) + lowerBound;
         return result;
     }

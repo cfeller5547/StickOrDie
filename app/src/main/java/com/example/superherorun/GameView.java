@@ -8,12 +8,16 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.graphics.Canvas;
+
+import androidx.core.content.res.ResourcesCompat;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -21,19 +25,19 @@ import java.util.Random;
 
 public class GameView extends View {
     private Character character;
-    private Platforms platform;
     private PlatformCollection platformCollection;
-
+    private SoundPlayer sound;
     static MediaPlayer gameMusic;
+    MyTimer timer;
+    private boolean firstClick = false;
     private boolean isPlaying = true;
     private boolean isGameOver = false;
     private boolean playerClicked = false;
-    private Canvas canvasRetriever;
     private boolean playerTopTouchedPlatformBottom = false;
     private Random random;
     private Paint paint;
     private Bitmap bm;
-    private Bitmap dyingBm;
+    private Bitmap dyingBm, leftBm, rightBm;
     private Handler handler;
     private Runnable r;
     private int screenX, screenY;
@@ -42,61 +46,68 @@ public class GameView extends View {
     private boolean playerJumpedAndCollided = false;
     private boolean playerStartedMovingLeft = false;
     private boolean playerStartedMovingRight = false;
+    private boolean goingToContinueMovingX = false;
     private boolean snapBackOccured = false;
-    private int characterRectRightAfterSnapback = 0;
-    private int characterRectLeftAfterSnapback = 0;
-    private int characterRectTopAfterSnapback = 0;
+    private int collideCount = 0;
     static int distanceCharRightToPlatformLeft;
     static int distanceCharLeftToPlatformRight;
     static int distanceCharTopToPlatformBottom;
-    static int score;
+    public int score;
+    boolean speedPhase1 = false;
+    boolean speedPhase2 = false;
+    boolean speedPhase3 = false;
+    private int moveNum15 = (Constants.SCREEN_WIDTH/72); //=15
 
     public GameView(Context context, int screenX, int screenY) {
 
         super(context);
-        gameMusic = MediaPlayer.create(context,R.raw.growingonme);
+
+        gameMusic = MediaPlayer.create(context, R.raw.growingonme);
         gameMusic.start();
+        sound = new SoundPlayer(this.getContext());
 
         paint = new Paint();
-        paint.setTextSize(128);
-        paint.setColor(Color.RED);
+        Typeface audioWideFont = ResourcesCompat.getFont(context, R.font.audiowide);
+        paint.setTextSize(Math.round(Constants.SCREEN_WIDTH/8.4375));
+        paint.setTypeface(audioWideFont);
+        paint.setColor(Color.BLACK);
         character = new Character();
-
         random = new Random();
         character.setWidth(200*Constants.SCREEN_WIDTH/1080);
         character.setHeight(200*Constants.SCREEN_HEIGHT/1920);
-        character.setX((400*Constants.SCREEN_WIDTH/1080) + 40 ); //adding 60 until universality solved
-        character.setY((Constants.SCREEN_HEIGHT/2-character.getHeight()/2) + 300);
+        character.setX((400*Constants.SCREEN_WIDTH/1080) + (Constants.SCREEN_WIDTH/27));
+        character.setY((int) ((Constants.SCREEN_HEIGHT/2-character.getHeight()/2) + (Constants.SCREEN_WIDTH/3.6)));
         bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.character);
         bm = Bitmap.createScaledBitmap(bm, character.getWidth(), character.getHeight(), false);
         dyingBm = BitmapFactory.decodeResource(context.getResources(), R.drawable.characterdying);
         dyingBm = Bitmap.createScaledBitmap(dyingBm, character.getWidth(), character.getHeight(), false);
+        leftBm = BitmapFactory.decodeResource(context.getResources(), R.drawable.charactermovingleft);
+        leftBm = Bitmap.createScaledBitmap(leftBm, character.getWidth(), character.getHeight(), false);
+        rightBm = BitmapFactory.decodeResource(context.getResources(), R.drawable.charactermovingright);
+        rightBm = Bitmap.createScaledBitmap(rightBm, character.getWidth(), character.getHeight(), false);
         character.setBm(bm);
         platformCollection = new PlatformCollection(context, screenX, screenY, character);
         this.screenX = screenX;
         this.screenY = screenY;
         screenRatioX = 1920f / screenX;
         screenRatioY = 1080f / screenY;
-
-
+        timer = new MyTimer();
         handler = new Handler();
+        gameMusic.start();
         r = new Runnable() {
             @Override
             public void run() {
-                //while(isPlaying) {
                 invalidate();
                 update();
                 }
         };
     }
 
-
-
     public void draw(Canvas canvas){
         super.draw(canvas);
         character.draw(canvas);
         platformCollection.draw(canvas);
-        canvas.drawText(score + "", Constants.SCREEN_WIDTH / 2f, 164, paint);
+        canvas.drawText(score + "", Constants.SCREEN_WIDTH / 2f, Math.round(Constants.SCREEN_WIDTH/6.58536f), paint); //fix universality
 
         handler.postDelayed(r, 1);
 
@@ -107,7 +118,6 @@ public class GameView extends View {
             getContext().startActivity(gameOverIntent);
             gameMusic.stop();
 
-
         }
     }
 
@@ -115,20 +125,30 @@ public class GameView extends View {
     public boolean onTouchEvent(MotionEvent event) {
         switch(event.getAction()){
             case MotionEvent.ACTION_DOWN:
+
+                if(firstClick ==  false){
+                    timer.startTimer();
+                }
+                firstClick = true;
+
                 if(playerClicked == false) {
                     if (event.getX() < screenX / 2) { //left side of screen
-                        character.setMoveX(-15); //moves left in x direction
+                        character.setMoveX(-moveNum15); //moves left in x direction; FIX UNIVERSALITY
+                        sound.playJumpSound();
                         playerStartedMovingLeft = true;
                         playerStartedMovingRight = false;
                         playerClicked = true;
                         snapBackOccured = false;
+                        playerJumpedAndCollided = false;
                         break;
                     } else if (event.getX() > screenX / 2) { //right side of screen
-                        character.setMoveX(+15); //moves right in x direction
+                        character.setMoveX(moveNum15); //moves right in x direction; FIX UNIVERSALITY
+                        sound.playJumpSound();
                         playerStartedMovingRight = true;
                         playerStartedMovingLeft = false;
                         playerClicked = true;
                         snapBackOccured = false;
+                        playerJumpedAndCollided = false;
                         break;
                     }
                 }
@@ -140,41 +160,47 @@ public class GameView extends View {
     public void update(){
 
         platformCollection.move();
-        score++;
+        score = timer.getTimerSeconds();
 
         for (int i = 0; i < platformCollection.platformCount; i++) {
             distanceCharLeftToPlatformRight = difference(platformCollection.getRect(i).right,character.getRect().left);
             distanceCharRightToPlatformLeft = difference(platformCollection.getRect(i).left, character.getRect().right);
             distanceCharTopToPlatformBottom = difference(platformCollection.getRect(i).bottom, character.getRect().top);
 
-
-
             if (Rect.intersects(character.getRect(), platformCollection.getRect(i))) {
+                collideCount++;
+                playerJumpedAndCollided = true;
                 platformCollisionIndex = i;
                 snapBack();
                 playerClicked = false;//we set playerclicked to false after collision so he can move again
                 character.setMoveX(0);
-                playerJumpedAndCollided = true;
-
             }
+
             if (goingToDie()){
                 character.setBm(dyingBm);
-
+                sound.playDyingScreamSound();
+            }
+            else{
+                bitmapEvaluator();
             }
 
             if(playerJumpedAndCollided == true && playerClicked == false){
                 if(platformCollection.platformMovedBelowCharacter(platformCollisionIndex)){ //the platform that collided with character has moved below the character
-                    Log.d("GameView::update", " platform has moved below character");
                     continueMovingX(); //platform falls off screen in direction it was previously moving
+                    playerClicked = true;
+                    snapBackOccured = false;
                 }
             }
-            if(Rect.intersects(character.getRect(), platformCollection.getRect(i)) && platformCollection.characterTopIsTouchingPlatformBottom(platformCollisionIndex)){
-                playerClicked = false;
+
+            if(snapBackOccured && playerTopTouchedPlatformBottom) {
                 character.setMoveX(0);
                 character.setMoveY(platformCollection.getPlatformSpeed());
-                playerTopTouchedPlatformBottom = true;
+                playerClicked = true;
             }
         }
+
+        increasePlatSpeedIntervals();
+
         if(character.x < 0 - character.getBm().getWidth() ||
                 character.x > screenX - character.getBm().getWidth()){
             isGameOver = true;
@@ -185,47 +211,74 @@ public class GameView extends View {
 
     }
 
+    public void increasePlatSpeedIntervals(){
+
+        if(score >= 15 && !speedPhase1){
+            platformCollection.increasePlatformSpeedBy2();
+            speedPhase1 = true;
+        }
+        if(score >= 30 && !speedPhase2){
+            platformCollection.increasePlatformSpeedBy2();
+            speedPhase2 = true;
+        }
+        if(score >= 45 && !speedPhase3){
+            platformCollection.increasePlatformSpeedBy2();
+            speedPhase3 = true;
+        }
+    }
+
+    public void bitmapEvaluator(){
+            if (character.movingRight()) {
+                character.setBm(rightBm);
+            }
+            if (character.movingLeft()) {
+                character.setBm(leftBm);
+            }
+            if (character.getMoveX() == 0) {
+                character.setBm(bm);
+            }
+        }
+
+
     public Boolean goingToDie() {
 
         Boolean charBeyondAllPlatformsLeft = false;
         Boolean charBeyondAllPlatformsRight = false;
 
-    if(playerStartedMovingRight) {
+    if(character.movingRight()) {
 
             int tmpPlatForm = platformCollection.getFurthestRightPlatformLeftXInView();
 
-                if (playerJumpedAndCollided&&playerStartedMovingRight) {
-                    if (character.getX()+character.getWidth() > tmpPlatForm) {
-                        charBeyondAllPlatformsLeft = true;      //sets to false only if this condition happens
-                        Log.d("PFC::move", " charBeyondAllPlatformsLeft = " + charBeyondAllPlatformsLeft);
-                    }
+                if (snapBackOccured) {
+                        if (character.getX() + character.getWidth() > tmpPlatForm) { //character right greater than furthest rightPlatLeftXCoordinate
+                            charBeyondAllPlatformsLeft = true;
+                        }
                 }
-                else {
-                    if (character.getX()+character.getWidth() > tmpPlatForm) {
+                if(collideCount == 0){
+                    if (character.getX() + character.getWidth() > tmpPlatForm) { //character right greater than furthest rightPlatLeftXCoordinate
                         charBeyondAllPlatformsLeft = true;
                     }
                 }
+
         }
 
-    if(playerStartedMovingLeft) {
+    if(character.movingLeft()) {
+
             int tmpPlatForm = platformCollection.getFurthestLeftPlatformRightXInView();
 
-                if (playerJumpedAndCollided&&playerStartedMovingLeft) {
-                    if (character.getX() < tmpPlatForm) {
-                        charBeyondAllPlatformsRight = true;
-                    }
+                if (snapBackOccured) {
+                        if (character.getX() < tmpPlatForm) {
+                            charBeyondAllPlatformsRight = true;
+                        }
                 }
-                else {
-                    if (character.getX() < tmpPlatForm) {
-                        charBeyondAllPlatformsRight = true;
-                    }
+            if(collideCount == 0){
+                if (character.getX() < tmpPlatForm) {
+                    charBeyondAllPlatformsRight = true;
                 }
             }
-        Boolean GoingToDie= (playerTopTouchedPlatformBottom ||
-                (playerStartedMovingRight && snapBackOccured && charBeyondAllPlatformsLeft) ||
-                (playerStartedMovingLeft && snapBackOccured && charBeyondAllPlatformsRight) ||
-                (!playerJumpedAndCollided && charBeyondAllPlatformsLeft) ||
-                (!playerJumpedAndCollided && charBeyondAllPlatformsRight));
+
+    }
+        Boolean GoingToDie= (playerTopTouchedPlatformBottom || charBeyondAllPlatformsRight || charBeyondAllPlatformsLeft );
 
         return GoingToDie;
     }
@@ -235,16 +288,15 @@ public class GameView extends View {
         if(smallestNum(distanceCharLeftToPlatformRight, distanceCharRightToPlatformLeft, distanceCharTopToPlatformBottom) == distanceCharLeftToPlatformRight){
             character.setX(platformCollection.getRect(platformCollisionIndex).right);
             snapBackOccured = true;
-            characterRectLeftAfterSnapback = character.getRect().left;
         }
         if(smallestNum(distanceCharLeftToPlatformRight, distanceCharRightToPlatformLeft, distanceCharTopToPlatformBottom) == distanceCharRightToPlatformLeft){
             character.setX(platformCollection.getRect(platformCollisionIndex).left - character.width);
             snapBackOccured = true;
-            characterRectRightAfterSnapback = character.getRect().right;
         }
         if(smallestNum(distanceCharLeftToPlatformRight, distanceCharRightToPlatformLeft, distanceCharTopToPlatformBottom) == distanceCharTopToPlatformBottom){
             character.setY(platformCollection.getRect(platformCollisionIndex).bottom);
-            characterRectTopAfterSnapback = character.getY();
+            snapBackOccured = true;
+            playerTopTouchedPlatformBottom = true;
         }
 
     }
@@ -257,24 +309,17 @@ public class GameView extends View {
 
     public void continueMovingX(){
         if(playerStartedMovingRight == true){
-            character.setMoveX(15);
+            character.setMoveX(moveNum15);
         }
         else{
-            character.setMoveX(-15);
+            character.setMoveX(-moveNum15);
         }
     }
 
     public int difference(int var1, int var2){
         return Math.abs(var2 - var1);
     }
-    public void setCanvas(Canvas canvas){
-        this.canvasRetriever = canvas;
-    }
-    public Canvas getCanvas(){
-        return canvasRetriever;
-    }
-    public static void stopMusic(){
-        gameMusic.stop();
-    }
+
+
 
 }

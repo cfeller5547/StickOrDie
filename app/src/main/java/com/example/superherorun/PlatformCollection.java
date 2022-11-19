@@ -14,15 +14,11 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.util.Log;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 
 public class PlatformCollection {
 
-    private int jIndex;
     private Paint paint;
     private Platforms[] plats;
     public int maxPlatformCount = 10;
@@ -30,7 +26,7 @@ public class PlatformCollection {
     private int lastPlatformIndex = -1;
     private Rect rect;
     private int randScreenLocation;
-    private int speed = 7;
+    private int speed = Math.round(Constants.SCREEN_WIDTH / 154.2857f); //=7
     private int maxX;
     private int minX;
     private int maxY;
@@ -71,13 +67,6 @@ public class PlatformCollection {
         }
         return platformCount;
     }
-
-  /*  public void LogPlatformsInView() {
-        for (int i = 0; i < platformCount; i++) {
-            Log.d("PFC::LogPlatformsInView", " i = " + i);
-            Log.d("PFC::LogPlatformsInView", " in View = " + plats[i].getInView());
-        }
-    }*/
 
     public void move() {
         // figure out active platform
@@ -126,7 +115,7 @@ public class PlatformCollection {
     }
 
     public int getFurthestLeftPlatformRightXInView(){
-        int smallestLeftValue = 2000;
+        int smallestLeftValue = Constants.SCREEN_WIDTH;//=1080
         for(int i=0; i < platformCount; i++) {
             if (plats[i].getFullyInView()) {
                 int platsRight = plats[i].getX() + plats[i].getBitmap().getWidth();
@@ -151,17 +140,16 @@ public class PlatformCollection {
         return LargestRightValue;
     }
 
-    public Platforms getPlatformAtIndex(int i)
-    {
-        return plats[i];
-    }
-
     public int getPlatformSpeed(){
             return this.speed;
     }
 
     public void movePlatformDown(int i){
         plats[i].setY(plats[i].getY() + this.speed);
+    }
+
+    public int increasePlatformSpeedBy2(){
+        return this.speed += 2;
     }
 
     public void SpawnPlatform(int i){
@@ -172,16 +160,6 @@ public class PlatformCollection {
         lastPlatformIndex = i;
     }
 
-    public int RandGenerator(){
-            int num = 0;
-           Random rand = new Random();
-           rand.setSeed(System.currentTimeMillis());
-           int lowerBound = -2000;
-           int upperBound = 0;
-           num = rand.nextInt(upperBound - lowerBound) + lowerBound;
-
-        return num;
-    }
 
     public void draw(Canvas canvas){
 
@@ -217,19 +195,6 @@ public class PlatformCollection {
                 return true;
             }
             else {
-                return false;
-            }
-        }
-        return false;
-    }
-
-    public boolean characterTopIsTouchingPlatformBottom(int i){
-        if(plats[i] != null){
-            if(this.getRectBottom(i) == (character.getRectTop() + 1) || this.getRectBottom(i) == (character.getRectTop() + 2)){
-                //setting to +1 and +2 until can figure out why collision is not at exact coordinates
-                return true;
-            }
-            else{
                 return false;
             }
         }
@@ -279,7 +244,7 @@ public class PlatformCollection {
 
                 }
             } else if (platformRightX < x1) { //platform spawned right of character, collide = true
-                collide |= distance(x1, platformRightX) < character.getWidth();
+                collide |= distance(x1, platformRightX) < character.getWidth(); //defines width  in between previous and next platform
                 Log.d("PFC::collides2", "collide true case 2 : platformLeftX= " + platformLeftX);
                 Log.d("PFC::collides2", "collide true case 2 : platformRightX= " + platformRightX);
                 Log.d("PFC::collides2", "collide true case 2 : x1= " + x1);
