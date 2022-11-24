@@ -90,6 +90,31 @@
          />
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_alignParentBottom="true"
+        android:fontFamily="@font/audiowide"
+        android:text="Music by"
+        android:textColor="@color/grey"
+        android:textSize="@dimen/_15ssp"
+        android:translationX="@dimen/_minus25sdp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/play"
+        android:fontFamily="@font/audiowide"
+        android:text="Snayk"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_15ssp"
+        android:translationX="@dimen/_minus40sdp"
+        />
+
+
+    <TextView
         android:id="@+id/play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -99,7 +124,7 @@
         android:text="Play"
         android:textColor="#000000"
         android:textSize="@dimen/_47ssp"
-        android:translationY="@dimen/_minus37sdp" />
+        android:translationY="@dimen/_minus60sdp" />
 
 
 

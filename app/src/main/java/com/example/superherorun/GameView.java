@@ -56,6 +56,7 @@ public class GameView extends View {
     boolean speedPhase1 = false;
     boolean speedPhase2 = false;
     boolean speedPhase3 = false;
+    boolean speedPhase4 = false;
     private int moveNum15 = (Constants.SCREEN_WIDTH/72); //=15
 
     public GameView(Context context, int screenX, int screenY) {
@@ -225,6 +226,11 @@ public class GameView extends View {
             platformCollection.increasePlatformSpeedBy2();
             speedPhase3 = true;
         }
+        if(score >= 60 && !speedPhase4){
+            platformCollection.increasePlatformSpeedBy2();
+            speedPhase4 = true;
+        }
+
     }
 
     public void bitmapEvaluator(){
