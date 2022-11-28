@@ -21,7 +21,7 @@ public class MyTimer {
 
     public int getTimerSeconds(){
         int rounded = (int) Math.round(time);
-        int seconds = ((rounded % 86400) % 3600) % 60;
+        int seconds = ((rounded % 86400) % 3600) % 5000;
         return seconds;
     }
 

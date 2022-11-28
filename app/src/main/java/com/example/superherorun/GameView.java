@@ -57,6 +57,10 @@ public class GameView extends View {
     boolean speedPhase2 = false;
     boolean speedPhase3 = false;
     boolean speedPhase4 = false;
+    boolean speedPhase5 = false;
+    boolean speedPhase6 = false;
+    boolean speedPhase7 = false;
+    boolean playSound = false;
     private int moveNum15 = (Constants.SCREEN_WIDTH/72); //=15
 
     public GameView(Context context, int screenX, int screenY) {
@@ -76,7 +80,7 @@ public class GameView extends View {
         random = new Random();
         character.setWidth(200*Constants.SCREEN_WIDTH/1080);
         character.setHeight(200*Constants.SCREEN_HEIGHT/1920);
-        character.setX((400*Constants.SCREEN_WIDTH/1080) + (Constants.SCREEN_WIDTH/27));
+        character.setX((Constants.SCREEN_WIDTH/2) - (character.getWidth()/2));
         character.setY((int) ((Constants.SCREEN_HEIGHT/2-character.getHeight()/2) + (Constants.SCREEN_WIDTH/3.6)));
         bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.character);
         bm = Bitmap.createScaledBitmap(bm, character.getWidth(), character.getHeight(), false);
@@ -179,7 +183,10 @@ public class GameView extends View {
 
             if (goingToDie()){
                 character.setBm(dyingBm);
-                sound.playDyingScreamSound();
+                if(!playSound) {
+                    sound.playDyingScreamSound();
+                    playSound = true;
+                }
             }
             else{
                 bitmapEvaluator();
@@ -229,6 +236,18 @@ public class GameView extends View {
         if(score >= 60 && !speedPhase4){
             platformCollection.increasePlatformSpeedBy2();
             speedPhase4 = true;
+        }
+        if(score >= 75 && !speedPhase5){
+            platformCollection.increasePlatformSpeedBy2();
+            speedPhase5 = true;
+        }
+        if(score >= 90 && !speedPhase6){
+            platformCollection.increasePlatformSpeedBy2();
+            speedPhase6 = true;
+        }
+        if(score >= 105 && !speedPhase7){
+            platformCollection.increasePlatformSpeedBy2();
+            speedPhase7 = true;
         }
 
     }

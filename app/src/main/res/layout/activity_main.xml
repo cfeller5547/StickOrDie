@@ -12,7 +12,9 @@
     <ImageView
         android:id="@+id/imageView6"
         android:layout_width="@dimen/_16sdp"
-        android:layout_height="@dimen/_133sdp"
+        android:layout_height="@dimen/_150sdp"
+        android:layout_below="@id/plat5"
+        android:layout_alignTop="@id/play"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="@dimen/_25sdp"
@@ -31,29 +33,28 @@
 
 
     <ImageView
+        android:id="@+id/plat1"
         android:layout_width="@dimen/_16sdp"
         android:layout_height="@dimen/_133sdp"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/title"
         android:layout_marginStart="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_58sdp"
+        android:layout_marginTop="@dimen/_20sdp"
         android:scaleType="centerCrop"
         android:src="@drawable/platform1" />
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/plat3"
         android:layout_width="@dimen/_16sdp"
         android:layout_height="@dimen/_80sdp"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/_254sdp"
         android:layout_marginTop="@dimen/_396sdp"
         android:scaleType="centerCrop"
         android:src="@drawable/platform1" />
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/plat5"
         android:layout_width="@dimen/_16sdp"
         android:layout_height="@dimen/_160sdp"
         android:layout_alignParentStart="true"
@@ -77,6 +78,8 @@
         android:src="@drawable/platform1" />
 
     <TextView
+        android:id="@+id/title"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -90,28 +93,16 @@
          />
 
     <TextView
+        android:id="@+id/music_credit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/music_credits"
+        android:fontFamily="@font/audiowide"
         android:layout_centerInParent="true"
-        android:layout_alignParentBottom="true"
-        android:fontFamily="@font/audiowide"
-        android:text="Music by"
-        android:textColor="@color/grey"
-        android:textSize="@dimen/_15ssp"
-        android:translationX="@dimen/_minus25sdp"
-        />
+        android:textSize="@dimen/_15ssp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@+id/play"
-        android:fontFamily="@font/audiowide"
-        android:text="Snayk"
-        android:textColor="@color/black"
-        android:textSize="@dimen/_15ssp"
-        android:translationX="@dimen/_minus40sdp"
-        />
+
 
 
     <TextView
@@ -120,6 +111,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:layout_above="@id/imageViewCharacter"
         android:fontFamily="@font/audiowide"
         android:text="Play"
         android:textColor="#000000"

@@ -19,11 +19,13 @@ import java.util.Random;
 
 public class PlatformCollection {
 
+
     private Paint paint;
     private Platforms[] plats;
     public int maxPlatformCount = 10;
     public int platformCount = maxPlatformCount;
     private int lastPlatformIndex = -1;
+    private int lastLastPlatformIndex = -1;
     private Rect rect;
     private int randScreenLocation;
     private int speed = Math.round(Constants.SCREEN_WIDTH / 154.2857f); //=7
@@ -36,7 +38,7 @@ public class PlatformCollection {
     private int prevActivePlatformIndex=-1;
     // Platform that is currently moving into view
     private int currActivePlatformIndex=-1;
-
+    private int iCounter = 0;
 
     PlatformCollection(Context context, int screenX, int screenY, Character c) {
 
@@ -47,7 +49,7 @@ public class PlatformCollection {
         minY = 0;
         plats = new Platforms[maxPlatformCount];
         for (int i = 0; i < maxPlatformCount; i++) {
-            plats[i] = new Platforms(context, screenX, screenY, getNextX());
+            plats[i] = new Platforms(context, screenX, screenY, arrangeXSpawn());
         }
         SpawnPlatform(0);
         paint = new Paint();
@@ -115,7 +117,7 @@ public class PlatformCollection {
     }
 
     public int getFurthestLeftPlatformRightXInView(){
-        int smallestLeftValue = Constants.SCREEN_WIDTH;//=1080
+        int smallestLeftValue = Constants.SCREEN_WIDTH;//=1440
         for(int i=0; i < platformCount; i++) {
             if (plats[i].getFullyInView()) {
                 int platsRight = plats[i].getX() + plats[i].getBitmap().getWidth();
@@ -155,9 +157,10 @@ public class PlatformCollection {
     public void SpawnPlatform(int i){
         plats[i].setBitmap(Bitmap.createScaledBitmap(plats[i].getBitmap(), BitmapWidth(), BitmapHeight(), false));
         plats[i].setY(minY - plats[i].getBitmap().getHeight());
-        plats[i].setX(getNextX());
-
+        plats[i].setX(arrangeXSpawn());
+        iCounter++;
         lastPlatformIndex = i;
+
     }
 
 
@@ -209,50 +212,39 @@ public class PlatformCollection {
         
         boolean collide = false;
         int x1=x;
-        Log.d("PFC::collides1", "x1 /left = " + x1);
+        //Log.d("PFC::collides1", "x1 /left = " + x1);
 
         // check for platform collision
         for(int i = 0; i < platformCount && !collide; i++){
             Platforms temp = plats[i];
             if (temp != null && temp.getInView()) {
-                Log.d("PFC::collides1", "current index i = " + i);
+                //Log.d("PFC::collides1", "current index i = " + i);
                 int x2=x1+temp.getBitmap().getWidth();
-                Log.d("PFC::collides1", "x2 /right = " + x2);
+                //Log.d("PFC::collides1", "x2 /right = " + x2);
                 int platformLeftX=temp.getX();
-                Log.d("PFC::collides1", "platformLeftX  = " + platformLeftX);
+                //Log.d("PFC::collides1", "platformLeftX  = " + platformLeftX);
                 int platformRightX = platformLeftX + temp.getBitmap().getWidth();
-                Log.d("PFC::collides1", "platformRightX = " + platformRightX);
+                //Log.d("PFC::collides1", "platformRightX = " + platformRightX);
                 collide = (x1 > platformLeftX && x1 < platformRightX) || (x2 > platformLeftX && x2 < platformRightX) || (x1 == platformLeftX);
                 //(distance(x2, platformLeftX) < character.getWidth() || distance(x1, platformRightX) < character.getWidth()); //collide true
             }
         }
-
-        if(collide == false && lastPlatformIndex != -1) {
-            Log.d("PFC::collides2", "New Platform did not collide with a previous platform");
+            //here we checking previous and current
+        if(collide == false && lastPlatformIndex != -1) { //means there is at last two platforms in view
+            //Log.d("PFC::collides2", "New Platform did not collide with a previous platform");
             Platforms lastCreatedPlatform = plats[lastPlatformIndex];
-            int platformLeftX = lastCreatedPlatform.getX();
-            int platformRightX = platformLeftX + lastCreatedPlatform.getBitmap().getWidth();
-            int x2=x1+lastCreatedPlatform.getBitmap().getWidth();
+            int lastPlatformLeftX = lastCreatedPlatform.getX();
+            int lastPlatformRightX = lastPlatformLeftX + lastCreatedPlatform.getBitmap().getWidth();
+            int x2=x1+lastCreatedPlatform.getBitmap().getWidth(); //width same for all plats; this is current platforms
 
-            if (x2 < platformLeftX) {
-                collide |= distance(x2, platformLeftX) < character.getWidth(); //if new platform spawns left of old one, collide = true
-                if(collide == true){
-                    Log.d("PFC::collides2", "collide true case 1 : platformRightX= " + platformRightX);
-                    Log.d("PFC::collides2", "collide true case 1 :PlatformLeftX= " + platformLeftX);
-                    Log.d("PFC::collides2", "collide true case 1 : x1= " + x1);
-                    Log.d("PFC::collides2", "collide true case 1 :x2= " + x2);
-
-                }
-            } else if (platformRightX < x1) { //platform spawned right of character, collide = true
-                collide |= distance(x1, platformRightX) < character.getWidth(); //defines width  in between previous and next platform
-                Log.d("PFC::collides2", "collide true case 2 : platformLeftX= " + platformLeftX);
-                Log.d("PFC::collides2", "collide true case 2 : platformRightX= " + platformRightX);
-                Log.d("PFC::collides2", "collide true case 2 : x1= " + x1);
-                Log.d("PFC::collides2", "collide true case 2 :x2= " + x2);
-            } else {
-                Log.d("PFC::collides2", "bullshit = " + platformRightX);
+            if (x2 < lastPlatformLeftX) { //if current platform is to the left of the previous platform
+                collide |= distance(x2, lastPlatformLeftX) < character.getWidth();//if previous and current platform left distance is less than character width collide is true
 
             }
+            else if (lastPlatformRightX < x1) {  //if current platform is to the right of the previous platform
+                collide |= distance(x1, lastPlatformRightX) < character.getWidth(); //if previous and current platform right distance is less than character width collide is true
+            }
+
         }
 
         // if we didn't collide with a platform, check collision with character
@@ -268,15 +260,39 @@ public class PlatformCollection {
                 }
             }
         }
-        if (collide)
-        {
-            //Log.d("PFC::collides", "  Collision Detected");
-        }
-        else
-        {
-            //Log.d("PFC::collides", "  No collision");
-        }
         return collide;
+    }
+
+    public int RandGenerator(int lowerBound, int upperBound){
+        Random rand = new Random();
+        rand.setSeed(System.currentTimeMillis());
+        int num = rand.nextInt(upperBound-lowerBound) + lowerBound;
+        return num;
+    }
+
+    private boolean isEvenNumber(int x){
+        if(x % 2 == 0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public int arrangeXSpawn(){
+
+            int leftSide = RandGenerator(0-BitmapWidth(), ((Constants.SCREEN_WIDTH * 40) / 100) - BitmapWidth()); //between 0 and 576
+            int rightSide = RandGenerator(((Constants.SCREEN_WIDTH * 60) / 100), Constants.SCREEN_WIDTH-BitmapWidth()); //864 to 1440
+        Log.d("PFC::arrangeXSpawn", "iCounter = " + iCounter);
+        Log.d("PFC::arrangeXSpawn", "leftSide = " + leftSide);
+        Log.d("PFC::arrangeXSpawn", "rightSide = " + rightSide);
+
+            if (isEvenNumber(iCounter)){
+                return leftSide;
+            }
+            else{
+                return rightSide;
+            }
     }
 
     public int getNextX() {

@@ -21,6 +21,7 @@ public class Platforms {
     private boolean isFullyInView;
     private boolean isPartiallyInView;
     private Bitmap bitmap;
+    public int countFullyInViewPlatforms = 0;
 
     Platforms(Context context, int screenX, int screenY, int xLocation){
         //we gonna need make this universal
@@ -32,11 +33,11 @@ public class Platforms {
         isPartiallyInView=false;
     }
 
-    public int RandGenerator(){
+    public int RandGenerator(int lowerBound, int upperBound){
         Random rand = new Random();
         rand.setSeed(System.currentTimeMillis());
-        int lowerBound = 1977;
-        int upperBound = 2300;
+        lowerBound = 1977;
+        upperBound = 2300;
         int num = rand.nextInt(upperBound-lowerBound) + lowerBound;
         return num;
     }
@@ -49,7 +50,7 @@ public class Platforms {
      static public int BitmapHeight(){
          Random rand = new Random();
          rand.setSeed(System.currentTimeMillis());
-         int lowerBound = Math.round(Constants.SCREEN_HEIGHT/9.885f);//=200
+         int lowerBound = Math.round(Constants.SCREEN_HEIGHT/9.885f);//9.885f=200; // 3.51648352f=546
          int upperBound = Math.round(Constants.SCREEN_HEIGHT/2.47125f); //=800
          int result = rand.nextInt(upperBound-lowerBound) + lowerBound;
         return result;
@@ -65,6 +66,7 @@ public class Platforms {
 
     public void setFullyInView(boolean y) {
         this.isFullyInView = y;
+        countFullyInViewPlatforms++;
     }
     public void setPartiallyInView(boolean y) {
         this.isPartiallyInView = y;
