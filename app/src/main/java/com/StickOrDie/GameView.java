@@ -1,25 +1,21 @@
-package com.example.superherorun;
+package com.StickOrDie;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Handler;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.graphics.Canvas;
 
 import androidx.core.content.res.ResourcesCompat;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 
 

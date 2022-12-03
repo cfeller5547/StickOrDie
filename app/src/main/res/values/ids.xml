@@ -3,7 +3,7 @@
     <!--app_id-->
     <string name="app_id" translatable="false">142769597226</string>
     <!--package_name-->
-    <string name="package_name" translatable="false">com.example.superherorun</string>
+    <string name="package_name" translatable="false">com.StickOrDie</string>
     <!--leaderboard Highscores-->
     <item type="id" name="highscore_leaderboards" id="CgkIqtbs7ZMEEAIQAA" />
 </resources>

@@ -1,19 +1,16 @@
-package com.example.superherorun;
+package com.StickOrDie;
 
-import static com.example.superherorun.Platforms.BitmapWidth;
-import static com.example.superherorun.Platforms.BitmapHeight;
+import static com.StickOrDie.Platforms.BitmapWidth;
+import static com.StickOrDie.Platforms.BitmapHeight;
 
 import android.content.Context;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.os.Handler;
-import android.util.Log;
+
 import java.util.Random;
 
 

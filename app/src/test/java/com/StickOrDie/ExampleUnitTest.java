@@ -1,4 +1,4 @@
-package com.example.superherorun;
+package com.StickOrDie;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.example.superherorun;
+package com.StickOrDie;
 import java.util.Timer;
 import java.util.TimerTask;
 

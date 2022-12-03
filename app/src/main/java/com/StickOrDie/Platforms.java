@@ -1,15 +1,10 @@
-package com.example.superherorun;
+package com.StickOrDie;
 
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Rect;
-import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 public class Platforms {

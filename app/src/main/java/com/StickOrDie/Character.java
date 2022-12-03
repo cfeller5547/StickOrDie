@@ -1,9 +1,5 @@
-package com.example.superherorun;
-import android.graphics.Bitmap;
+package com.StickOrDie;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
-
-import java.util.ArrayList;
 
 public class Character extends BaseObject {
 

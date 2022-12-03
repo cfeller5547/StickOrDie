@@ -1,4 +1,4 @@
-package com.example.superherorun;
+package com.StickOrDie;
 
 import android.graphics.Bitmap;
 import android.graphics.Rect;
