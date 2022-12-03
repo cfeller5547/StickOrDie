@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "Superhero Run"
+rootProject.name = "Stick Or Die"
 include ':app'

@@ -10,6 +10,7 @@ public class Character extends BaseObject {
 
     private int moveX;
     private int moveY;
+    private int speed;
 
     public Character() {
 
@@ -47,6 +48,13 @@ public class Character extends BaseObject {
         this.moveY = move;
     }
 
+    public void setSpeed(int speed){
+        this.speed = speed;
+    }
+    public int getSpeed(){
+        return speed;
+    }
+
     public void draw(Canvas canvas) {
         moveX();
         moveY();
@@ -62,4 +70,3 @@ public class Character extends BaseObject {
 
 }
 
-//wheres rect

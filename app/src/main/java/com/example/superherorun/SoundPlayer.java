@@ -12,6 +12,8 @@ public class SoundPlayer {
     private static SoundPool soundPool;
     private static int jumpSound;
     private static int dyingScreamSound;
+    private static int phaseChangeSound;
+    private static int playerUnderSpikesSound;
 
 
     public SoundPlayer(Context context){
@@ -32,14 +34,31 @@ public class SoundPlayer {
 
         jumpSound = soundPool.load(context, R.raw.playerjump, 1);
         dyingScreamSound = soundPool.load(context, R.raw.dyingscream, 1);
-
+        phaseChangeSound = soundPool.load(context, R.raw.phasechangesound, 1);
+        playerUnderSpikesSound = soundPool.load(context, R.raw.playerunderspikessound, 1);
 
     }
+
 
     public void playDyingScreamSound(){
         soundPool.play(dyingScreamSound, 1.0f, 1.0f,1, 0,1.0f);
     }
+
+    public void stopDyingScreamSound()
+    {
+        if ((soundPool != null) && (dyingScreamSound != 0))
+        {
+            soundPool.stop(dyingScreamSound);
+        }
+    }
     public void playJumpSound(){
         soundPool.play(jumpSound, 1.0f, 1.0f,1, 0,1.0f);
     }
+    public void playPhaseChangeSound(){
+        soundPool.play(phaseChangeSound, 1.0f, 1.0f,1, 0,1.0f);
+    }
+    public void playPlayerUnderSpikesSound(){
+        soundPool.play(playerUnderSpikesSound, 1.0f, 1.0f,1, 0,1.0f);
+    }
+
 }

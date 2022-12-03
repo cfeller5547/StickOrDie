@@ -20,11 +20,9 @@ public class GameActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Point size = new Point();
         getWindowManager().getDefaultDisplay().getSize(size);
-
-
         gameView = new GameView(this,size.x, size.y);
-
         setContentView(gameView);
 
     }
+
 }

@@ -1,8 +1,6 @@
 package com.example.superherorun;
 
 
-import static com.example.superherorun.GameView.screenRatioX;
-import static com.example.superherorun.GameView.screenRatioY;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -25,7 +23,7 @@ public class Platforms {
 
     Platforms(Context context, int screenX, int screenY, int xLocation){
         //we gonna need make this universal
-        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.platform1);
+        bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.spikedplatform);
         bitmap = Bitmap.createScaledBitmap(getBitmap(), BitmapWidth(), BitmapHeight(), false);
         x = xLocation;
         y = screenY;
@@ -44,7 +42,7 @@ public class Platforms {
 
     static public int BitmapWidth()
     {
-        return Math.round(Constants.SCREEN_WIDTH / 18f);//=60
+        return Math.round(Constants.SCREEN_WIDTH / 18f);//=80
     }
 
      static public int BitmapHeight(){

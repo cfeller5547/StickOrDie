@@ -25,6 +25,13 @@ public class MyTimer {
         return seconds;
     }
 
+    public void stopTimer(){
+        if(timer!=null){
+            timer.cancel();
+            timer = null;
+        }
+    }
+
     public void resetTimer(){
         if(timerTask!= null){
             timerTask.cancel();

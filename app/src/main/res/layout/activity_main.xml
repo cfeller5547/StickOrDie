@@ -19,8 +19,17 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="@dimen/_25sdp"
         android:layout_marginTop="@dimen/_301sdp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/platform1" />
+        android:scaleType="fitXY"
+        android:src="@drawable/spikedplatform" />
+
+    <ImageView
+        android:id="@+id/leaderboards"
+        android:layout_width="@dimen/_120sdp"
+        android:layout_height="@dimen/_120sdp"
+        android:layout_above="@id/music_credit"
+        android:src="@drawable/leaderboard"
+        android:translationX="@dimen/_9ssp"
+        android:translationY="@dimen/_30sdp" />
 
     <ImageView
         android:id="@+id/imageViewCharacter"
@@ -40,8 +49,8 @@
         android:layout_below="@id/title"
         android:layout_marginStart="@dimen/_10sdp"
         android:layout_marginTop="@dimen/_20sdp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/platform1" />
+        android:scaleType="fitXY"
+        android:src="@drawable/spikedplatform" />
 
     <ImageView
         android:id="@+id/plat3"
@@ -50,8 +59,8 @@
         android:layout_alignParentStart="true"
         android:layout_marginStart="@dimen/_254sdp"
         android:layout_marginTop="@dimen/_396sdp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/platform1" />
+        android:scaleType="fitXY"
+        android:src="@drawable/spikedplatform" />
 
     <ImageView
         android:id="@+id/plat5"
@@ -62,8 +71,8 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/_242sdp"
         android:layout_marginTop="@dimen/_141sdp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/platform1" />
+        android:scaleType="fitXY"
+        android:src="@drawable/spikedplatform" />
 
     <ImageView
         android:id="@+id/imageView7"
@@ -74,12 +83,11 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/_113sdp"
         android:layout_marginTop="@dimen/_170sdp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/platform1" />
+        android:scaleType="fitXY"
+        android:src="@drawable/spikedplatform"  />
 
     <TextView
         android:id="@+id/title"
-
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -101,9 +109,6 @@
         android:fontFamily="@font/audiowide"
         android:layout_centerInParent="true"
         android:textSize="@dimen/_15ssp" />
-
-
-
 
     <TextView
         android:id="@+id/play"
