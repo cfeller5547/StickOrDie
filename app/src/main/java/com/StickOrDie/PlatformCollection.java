@@ -198,7 +198,7 @@ public class PlatformCollection {
 
 
 
-    public int RandGenerator(int lowerBound, int upperBound){
+    private int RandGenerator(int lowerBound, int upperBound){
         Random rand = new Random();
         rand.setSeed(System.currentTimeMillis());
         int num = rand.nextInt(upperBound-lowerBound) + lowerBound;

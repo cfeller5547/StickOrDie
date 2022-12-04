@@ -27,6 +27,7 @@ public class GameView extends View {
     static MediaPlayer gameMusic;
     MyTimer timer;
     MyTimer deathTimer;
+    GameOverShield gameOverShield;
     private boolean firstClick = false;
     private boolean isPlaying = true;
     private boolean isGameOver = false;
@@ -47,6 +48,9 @@ public class GameView extends View {
     private Random random;
     private Paint paint, paint2;
     private Bitmap bm;
+    private Bitmap gameOverShieldBm;
+    private Bitmap playAgainButtonBorderBm;
+    private Bitmap MainMenuButtonBorderBm;
     private Bitmap dyingBm, leftBm, rightBm, dyingRightBm, dyingLeftBm;
     private Handler handler;
     private Runnable r;
@@ -59,6 +63,10 @@ public class GameView extends View {
     private boolean goingToContinueMovingX = false;
     private boolean snapBackOccured = false;
     private int collideCount = 0;
+    private int mainMenuButtonX1;
+    private int mainMenuButtonX2;
+    private int playAgainButtonX1;
+    private int playAgainButtonX2;
     static int distanceCharRightToPlatformLeft;
     static int distanceCharLeftToPlatformRight;
     static int distanceCharTopToPlatformBottom;
@@ -97,7 +105,6 @@ public class GameView extends View {
         character.setHeight(200*Constants.SCREEN_HEIGHT/1920);
         character.setX((Constants.SCREEN_WIDTH/2) - (character.getWidth()/2));
         character.setY((int) ((Constants.SCREEN_HEIGHT/2-character.getHeight()/2) + (Constants.SCREEN_WIDTH/3.6)));
-
         bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.character);
         bm = Bitmap.createScaledBitmap(bm, character.getWidth(), character.getHeight(), false);
         dyingBm = BitmapFactory.decodeResource(context.getResources(), R.drawable.characterdying);
@@ -112,6 +119,8 @@ public class GameView extends View {
         rightBm = Bitmap.createScaledBitmap(rightBm, character.getWidth(), character.getHeight(), false);
         character.setBm(bm);
         platformCollection = new PlatformCollection(context, screenX, screenY, character);
+        gameOverShield = new GameOverShield(context);
+
         this.screenX = screenX;
         this.screenY = screenY;
         screenRatioX = 1920f / screenX;
@@ -133,30 +142,26 @@ public class GameView extends View {
         character.draw(canvas);
         platformCollection.draw(canvas);
 
+
         if(firstClick == false){
             canvas.drawText("tap to play", Constants.SCREEN_WIDTH / 8f, character.getY()-character.getBm().getHeight(), paint2); //fix universality
 
         }
-        canvas.drawText(score + "", Constants.SCREEN_WIDTH / 2f, Math.round(Constants.SCREEN_WIDTH/6.58536f), paint); //fix universality
 
         handler.postDelayed(r, 1);
 
         if(isGameOver){
-            platformCollection.freezePlatforms();
             if(snapBackOccured && playerTopTouchedPlatformBottom){ //hes dead under spikes stop scream
-                sound.stopDyingScreamSound();
                 if(playerUnderSpikesSoundInit == false) {
                     sound.playPlayerUnderSpikesSound();
                     playerUnderSpikesSoundInit = true;
                 }
             }
-            //dont start activity until 4 seconds passed
-            if(System.currentTimeMillis()-currentGameOverTime > 3000){
-                Intent gameOverIntent = new Intent(getContext(), GameOverActivity.class);
-                gameOverIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                gameOverIntent.putExtra("SCORE", score);
-                getContext().startActivity(gameOverIntent);
+            if(System.currentTimeMillis()-currentGameOverTime > 3000) { //3 seconds passed since death occurred
+                gameOverShield.draw(canvas);
                 gameMusic.stop();
+                //gameOverIntent.putExtra("SCORE", score);
+
             }
         }
     }
@@ -190,6 +195,22 @@ public class GameView extends View {
                         snapBackOccured = false;
                         playerJumpedAndCollided = false;
                         break;
+                    }
+                }
+                if(isGameOver){
+                    //player clicked inside play again rectangle box, restarting game activity
+                    if(this.insideBoxInterval(event.getX(), gameOverShield.rect1Leftx, gameOverShield.rect1Rightx)&&
+                            this.insideBoxInterval(event.getY(), gameOverShield.rect1Bottomy,gameOverShield.rect1Topy)){
+                        Intent gameActivityIntent = new Intent(getContext(), GameActivity.class);
+                        gameActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        getContext().startActivity(gameActivityIntent);
+                    }
+                    //player clicked inside play again rectangle box, taking to start activity
+                    if(this.insideBoxInterval(event.getX(), gameOverShield.rect2Leftx, gameOverShield.rect2Rightx)&&
+                            this.insideBoxInterval(event.getY(), gameOverShield.rect2Bottomy,gameOverShield.rect2Topy)){
+                        Intent MainActivityIntent = new Intent(getContext(), MainActivity.class);
+                        MainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        getContext().startActivity(MainActivityIntent);
                     }
                 }
                 break;
@@ -250,6 +271,22 @@ public class GameView extends View {
             timer.stopTimer();
         }
         isGameOver = true;
+    }
+
+    public int RandGenerator(int lowerBound, int upperBound){
+        Random rand = new Random();
+        rand.setSeed(System.currentTimeMillis());
+        int num = rand.nextInt(upperBound-lowerBound) + lowerBound;
+        return num;
+    }
+
+    private boolean insideBoxInterval(float eventGetXLocation, float x1Location, float x2Location){
+        if (eventGetXLocation > x1Location && eventGetXLocation < x2Location){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     public void increasePlatSpeedIntervals(){

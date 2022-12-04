@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
         this.getWindowManager().getDefaultDisplay().getMetrics(dm);
         Constants.SCREEN_WIDTH = dm.widthPixels;
         Constants.SCREEN_HEIGHT = dm.heightPixels;
+        final int RC_LEADERBOARD_UI = 9004;
+
         setContentView(R.layout.activity_main);
         gameStartMusic = MediaPlayer.create(MainActivity.this, R.raw.startscreenmusic);
         gameStartMusic.start();
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
                     if (isAuthenticated) {
                         Toast.makeText(MainActivity.this, "Succesful!", Toast.LENGTH_SHORT).show();
+
                     } else {
                         Toast.makeText(MainActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
                         Log.e("Connection", "Unable to connect", isAuthenticatedTask.getException());

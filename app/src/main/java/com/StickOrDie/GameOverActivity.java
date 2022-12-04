@@ -37,8 +37,6 @@ public class GameOverActivity extends AppCompatActivity {
             }
         });
 
-
-
         if(score > highScore){
             highScoreLabel.setText("High Score: " + score);
 
