@@ -36,7 +36,7 @@ public class GameView extends View {
     private boolean dyingBmInit = false;
     private boolean dyingLeftBmInit = false;
     private boolean dyingRightBmInit = false;
-    private boolean dyingScreamInit = false;
+
     private boolean phase1ChangeSoundInit = false;
     private boolean phase2ChangeSoundInit = false;
     private boolean phase3ChangeSoundInit = false;
@@ -46,7 +46,7 @@ public class GameView extends View {
     private boolean phase7ChangeSoundInit = false;
     private boolean playerUnderSpikesSoundInit = false;
     private Random random;
-    private Paint paint, paint2;
+    private Paint paint, paint2, paint3;
     private Bitmap bm;
     private Bitmap gameOverShieldBm;
     private Bitmap playAgainButtonBorderBm;
@@ -99,6 +99,11 @@ public class GameView extends View {
         paint2.setTextSize(Math.round(Constants.SCREEN_WIDTH/8.4375));
         paint2.setTypeface(audioWideFont);
         paint2.setColor(getResources().getColor(R.color.grey_light));
+        paint3 = new Paint();
+        paint3.setTextSize(Math.round(Constants.SCREEN_WIDTH/16));
+        paint3.setTypeface(audioWideFont);
+        paint3.setColor(getResources().getColor(R.color.black));
+        paint3.setTextAlign(Paint.Align.CENTER);
         character = new Character();
         random = new Random();
         character.setWidth(200*Constants.SCREEN_WIDTH/1080);
@@ -151,16 +156,10 @@ public class GameView extends View {
         handler.postDelayed(r, 1);
 
         if(isGameOver){
-            if(snapBackOccured && playerTopTouchedPlatformBottom){ //hes dead under spikes stop scream
-                if(playerUnderSpikesSoundInit == false) {
-                    sound.playPlayerUnderSpikesSound();
-                    playerUnderSpikesSoundInit = true;
-                }
-            }
             if(System.currentTimeMillis()-currentGameOverTime > 3000) { //3 seconds passed since death occurred
                 gameOverShield.draw(canvas);
                 gameMusic.stop();
-                //gameOverIntent.putExtra("SCORE", score);
+                canvas.drawText("Score: " + score, Constants.SCREEN_WIDTH/2, gameOverShield.mainMenuTextYLocation + (gameOverShield.rect2Height*2), paint3);
 
             }
         }
@@ -355,20 +354,13 @@ public class GameView extends View {
             if (!dyingRightBmInit&& character.movingRight()) {
                 character.setBm(dyingRightBm);
                 dyingRightBmInit = true;
-                if(dyingScreamInit == false) {
-                    sound.playDyingScreamSound();
-                    dyingScreamInit = true;
-                }
+
             }
             //dyingleftdirection
             if (!dyingLeftBmInit&& character.movingLeft()) {
                 character.setBm(dyingLeftBm);
                 dyingLeftBmInit = true;
-                if(dyingScreamInit == false) {
-                    sound.playDyingScreamSound();
-                    dyingScreamInit = true;
 
-                }
             }
         }
         //alive conditions

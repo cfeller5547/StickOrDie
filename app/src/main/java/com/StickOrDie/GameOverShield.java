@@ -36,6 +36,7 @@ public class GameOverShield {
     float rect2Topy = Math.round(Constants.SCREEN_HEIGHT/1.678); // =1550
     float rect2Rightx = Math.round(Constants.SCREEN_HEIGHT/2.7378); // =950;
     float rect2Bottomy = Math.round(Constants.SCREEN_HEIGHT/1.7937); // =1450;
+    float rect2Height = Math.abs(rect2Topy - rect2Bottomy);
 
     //playagaintext
     float playAgainTextYLocation;
