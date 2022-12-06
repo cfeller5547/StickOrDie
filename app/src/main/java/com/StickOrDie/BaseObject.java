@@ -71,6 +71,15 @@ public class BaseObject {
         return this.getRect().top;
     }
 
+    public int getRectLeft(){
+        return this.getRect().left;
+    }
+
+    public int getRectRight(){
+        return this.getRect().right;
+    }
+
+
     public int getRectBottom(){
         return this.getRect().bottom;
     }

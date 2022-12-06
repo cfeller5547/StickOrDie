@@ -1,5 +1,7 @@
 package com.StickOrDie;
 
+import static com.StickOrDie.GameActivity.gameMusic;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -8,7 +10,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
-import android.media.MediaPlayer;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,19 +25,18 @@ public class GameView extends View {
     private PlatformCollection platformCollection;
     private SoundPlayer sound;
     private long currentGameOverTime = 0;
-    static MediaPlayer gameMusic;
     MyTimer timer;
-    MyTimer deathTimer;
+    private boolean characterNotVisible = false;
     GameOverShield gameOverShield;
     private boolean firstClick = false;
     private boolean isPlaying = true;
     private boolean isGameOver = false;
+    private boolean setToDeathCoordinatesInit = false;
     private boolean playerClicked = false;
     private boolean playerTopTouchedPlatformBottom = false;
     private boolean dyingBmInit = false;
     private boolean dyingLeftBmInit = false;
     private boolean dyingRightBmInit = false;
-
     private boolean phase1ChangeSoundInit = false;
     private boolean phase2ChangeSoundInit = false;
     private boolean phase3ChangeSoundInit = false;
@@ -48,10 +48,8 @@ public class GameView extends View {
     private Random random;
     private Paint paint, paint2, paint3;
     private Bitmap bm;
-    private Bitmap gameOverShieldBm;
-    private Bitmap playAgainButtonBorderBm;
-    private Bitmap MainMenuButtonBorderBm;
-    private Bitmap dyingBm, leftBm, rightBm, dyingRightBm, dyingLeftBm;
+    private Bitmap dyingBm, leftBm, rightBm, dyingRightBm, dyingLeftBm, whiteBm;
+    private Bitmap charDeadPiece1, charDeadPiece2, charDeadPiece3, charDeadPiece4;
     private Handler handler;
     private Runnable r;
     private int screenX, screenY;
@@ -63,10 +61,6 @@ public class GameView extends View {
     private boolean goingToContinueMovingX = false;
     private boolean snapBackOccured = false;
     private int collideCount = 0;
-    private int mainMenuButtonX1;
-    private int mainMenuButtonX2;
-    private int playAgainButtonX1;
-    private int playAgainButtonX2;
     static int distanceCharRightToPlatformLeft;
     static int distanceCharLeftToPlatformRight;
     static int distanceCharTopToPlatformBottom;
@@ -79,17 +73,16 @@ public class GameView extends View {
     boolean speedPhase6 = false;
     boolean speedPhase7 = false;
     boolean dyingPauseInit = false;
-    boolean playSound = false;
-    private int moveNum15 = (Constants.SCREEN_WIDTH/72); //=15
+    private Character characterBottomLeftPiece;
+    private Character characterBottomRightPiece;
+    private Character characterTopLeftPiece;
+    private Character characterTopRightPiece;
+    int boundArr[];
+
 
     public GameView(Context context, int screenX, int screenY) {
-
         super(context);
-
-        gameMusic = MediaPlayer.create(context, R.raw.growingonme);
-        gameMusic.start();
         sound = new SoundPlayer(this.getContext());
-
         paint = new Paint();
         Typeface audioWideFont = ResourcesCompat.getFont(context, R.font.audiowide);
         paint.setTextSize(Math.round(Constants.SCREEN_WIDTH/8.4375));
@@ -105,6 +98,10 @@ public class GameView extends View {
         paint3.setColor(getResources().getColor(R.color.black));
         paint3.setTextAlign(Paint.Align.CENTER);
         character = new Character();
+        characterBottomLeftPiece = new Character();
+        characterBottomRightPiece = new Character();
+        characterTopLeftPiece = new Character();
+        characterTopRightPiece = new Character();
         random = new Random();
         character.setWidth(200*Constants.SCREEN_WIDTH/1080);
         character.setHeight(200*Constants.SCREEN_HEIGHT/1920);
@@ -112,6 +109,8 @@ public class GameView extends View {
         character.setY((int) ((Constants.SCREEN_HEIGHT/2-character.getHeight()/2) + (Constants.SCREEN_WIDTH/3.6)));
         bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.character);
         bm = Bitmap.createScaledBitmap(bm, character.getWidth(), character.getHeight(), false);
+        whiteBm = BitmapFactory.decodeResource(context.getResources(), R.drawable.background);
+        whiteBm = Bitmap.createScaledBitmap(whiteBm, character.getWidth(), character.getHeight(), false);
         dyingBm = BitmapFactory.decodeResource(context.getResources(), R.drawable.characterdying);
         dyingBm = Bitmap.createScaledBitmap(dyingBm, character.getWidth(), character.getHeight(), false);
         dyingRightBm = BitmapFactory.decodeResource(context.getResources(), R.drawable.characterdyingright);
@@ -123,6 +122,27 @@ public class GameView extends View {
         rightBm = BitmapFactory.decodeResource(context.getResources(), R.drawable.charactermovingright);
         rightBm = Bitmap.createScaledBitmap(rightBm, character.getWidth(), character.getHeight(), false);
         character.setBm(bm);
+        //piece 1 attributes
+
+        charDeadPiece1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.chardyingpiece1);
+        charDeadPiece1 = Bitmap.createScaledBitmap(charDeadPiece1, character.getWidth()/4, character.getHeight()/4, false);
+        //characterBottomLeftPiece.setBm(charDeadPiece1);
+        //piece 2 attributes
+
+        charDeadPiece2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.chardyingpiece2);
+        charDeadPiece2 = Bitmap.createScaledBitmap(charDeadPiece2, character.getWidth()/4, character.getHeight()/4, false);
+        //characterTopRightPiece.setBm(charDeadPiece2);
+        //piece 3 attributes
+
+        charDeadPiece3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.chardyingpiece3);
+        charDeadPiece3 = Bitmap.createScaledBitmap(charDeadPiece3, character.getWidth()/4, character.getHeight()/4, false);
+        //characterTopLeftPiece.setBm(charDeadPiece3);
+        //piece 4 attributes
+
+        charDeadPiece4 = BitmapFactory.decodeResource(context.getResources(), R.drawable.chardyingpiece4);
+        charDeadPiece4 = Bitmap.createScaledBitmap(charDeadPiece4, character.getWidth()/4, character.getHeight()/4, false);
+        //characterBottomRightPiece.setBm(charDeadPiece4);
+
         platformCollection = new PlatformCollection(context, screenX, screenY, character);
         gameOverShield = new GameOverShield(context);
 
@@ -144,24 +164,32 @@ public class GameView extends View {
 
     public void draw(Canvas canvas){
         super.draw(canvas);
-        character.draw(canvas);
+        if(characterNotVisible == false) {
+            character.draw(canvas);
+        }
+        if((characterBottomRightPiece.getBm() != null) && (characterTopRightPiece.getBm() != null)
+            && (characterBottomLeftPiece.getBm()!= null) && (characterTopLeftPiece.getBm()!=null)) {
+            characterBottomRightPiece.draw(canvas);
+            characterTopRightPiece.draw(canvas);
+            characterBottomLeftPiece.draw(canvas);
+            characterTopLeftPiece.draw(canvas);
+    }
         platformCollection.draw(canvas);
-
 
         if(firstClick == false){
             canvas.drawText("tap to play", Constants.SCREEN_WIDTH / 8f, character.getY()-character.getBm().getHeight(), paint2); //fix universality
 
         }
+        canvas.drawText(score + "", Constants.SCREEN_WIDTH / 2f, Math.round(Constants.SCREEN_WIDTH/6.58536f), paint); //fix universality
 
         handler.postDelayed(r, 1);
 
         if(isGameOver){
-            if(System.currentTimeMillis()-currentGameOverTime > 3000) { //3 seconds passed since death occurred
+            //if(System.currentTimeMillis()-currentGameOverTime > 3000) { //3 seconds passed since death occurred
                 gameOverShield.draw(canvas);
                 gameMusic.stop();
                 canvas.drawText("Score: " + score, Constants.SCREEN_WIDTH/2, gameOverShield.mainMenuTextYLocation + (gameOverShield.rect2Height*2), paint3);
-
-            }
+            //}
         }
     }
 
@@ -249,20 +277,81 @@ public class GameView extends View {
             }
 
             if(snapBackOccured && playerTopTouchedPlatformBottom) { //touched under the spikes
-                character.setMoveX(0);
+                if(setToDeathCoordinatesInit == false) {
+                    characterBottomLeftPiece.setX(character.getX());
+                    characterBottomLeftPiece.setY(character.getY());
+                    characterTopRightPiece.setX(character.getX());
+                    characterTopRightPiece.setY(character.getY());
+                    characterTopLeftPiece.setX(character.getX());
+                    characterTopLeftPiece.setY(character.getY());
+                    characterBottomRightPiece.setX(character.getX());
+                    characterBottomRightPiece.setY(character.getY());
+                    character.setMoveX(0);
+                    sound.playDeathPopSound();
+                    characterNotVisible = true;
+                    characterBottomLeftPiece.setBm(charDeadPiece1);
+                    characterTopRightPiece.setBm(charDeadPiece2);
+                    characterTopLeftPiece.setBm(charDeadPiece3);
+                    characterBottomRightPiece.setBm(charDeadPiece4);
+                    setToDeathCoordinatesInit = true;
+                }
+
+                moveCharacterPiecesVertically();
+
                 playerClicked = true;
-                gameOver();
+                //checks that all pieces have exited the screen before gameover
+                if(characterBottomLeftPiece.x < 0 - characterBottomLeftPiece.getBm().getWidth() ||
+                        characterBottomLeftPiece.x > screenX - characterBottomLeftPiece.getBm().getWidth()
+                &&(characterTopLeftPiece.x < 0 - characterTopLeftPiece.getBm().getWidth() ||
+                                characterTopLeftPiece.x > screenX - characterTopLeftPiece.getBm().getWidth())
+                &&(characterBottomRightPiece.x < 0 - characterBottomRightPiece.getBm().getWidth() ||
+                                characterBottomRightPiece.x > screenX - characterBottomRightPiece.getBm().getWidth())
+                &&(characterTopRightPiece.x < 0 - characterTopRightPiece.getBm().getWidth() ||
+                                characterTopRightPiece.x > screenX - characterTopRightPiece.getBm().getWidth())) {
+                    gameOver();
+                }
             }
         }
 
         increasePlatSpeedIntervals();
-
-        if(character.x < 0 - character.getBm().getWidth() ||
-                character.x > screenX - character.getBm().getWidth()){
-            gameOver();
+        if(character!=null) {
+            if (character.x < 0 - character.getBm().getWidth() ||
+                    character.x > screenX - character.getBm().getWidth()) {
+                gameOver();
+            }
         }
 
     }
+
+    private void moveCharacterPiecesVertically(){
+        //bottomleftpiece movement
+        characterBottomLeftPiece.setSpeed(19);
+        characterBottomLeftPiece.setMoveX(-characterBottomLeftPiece.getSpeed());
+        characterBottomLeftPiece.setMoveY(-characterBottomLeftPiece.getSpeed());
+        //topleftpiece movement
+        characterTopLeftPiece.setSpeed(19);
+        characterTopLeftPiece.setMoveX(-characterTopLeftPiece.getSpeed());
+        characterTopLeftPiece.setMoveY(characterTopLeftPiece.getSpeed());
+        //bottomrightpiece movement
+        characterBottomRightPiece.setSpeed(19);
+        characterBottomRightPiece.setMoveX(characterBottomRightPiece.getSpeed());
+        characterBottomRightPiece.setMoveY(-characterBottomRightPiece.getSpeed());
+        //toprightpiece movement
+        characterTopRightPiece.setSpeed(19);
+        characterTopRightPiece.setMoveX(characterTopRightPiece.getSpeed());
+        characterTopRightPiece.setMoveY(characterTopRightPiece.getSpeed());
+    }
+
+    /*private void setCharSpikeCollisionDeathInterval(int characterLeftXDeathLocation, int characterRightXDeathLocation){
+        int leftBound = characterLeftXDeathLocation - 5;
+        int rightBound = characterRightXDeathLocation + 5;
+        boundArr[0] = leftBound;
+        boundArr[1] = rightBound;
+    }*/
+
+    /*int[] getCharSpikeCollisionDeathInterval(){
+        return boundArr;
+    }*/
 
     public void gameOver(){
         if(isGameOver == false) {
@@ -272,7 +361,7 @@ public class GameView extends View {
         isGameOver = true;
     }
 
-    public int RandGenerator(int lowerBound, int upperBound){
+    private int RandGenerator(int lowerBound, int upperBound){
         Random rand = new Random();
         rand.setSeed(System.currentTimeMillis());
         int num = rand.nextInt(upperBound-lowerBound) + lowerBound;

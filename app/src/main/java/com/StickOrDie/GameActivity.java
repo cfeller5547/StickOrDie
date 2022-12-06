@@ -13,10 +13,13 @@ public class GameActivity extends AppCompatActivity {
 
 
     private GameView gameView;
+    static MediaPlayer gameMusic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        gameMusic = MediaPlayer.create(this, R.raw.growingonme);
+        gameMusic.start();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         Point size = new Point();
         getWindowManager().getDefaultDisplay().getSize(size);

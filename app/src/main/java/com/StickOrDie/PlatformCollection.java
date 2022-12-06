@@ -32,6 +32,7 @@ public class PlatformCollection {
     private int minY;
     private Bitmap bitmap;
     private Character character;
+
     private int prevActivePlatformIndex=-1;
     // Platform that is currently moving into view
     private int currActivePlatformIndex=-1;

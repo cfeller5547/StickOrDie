@@ -3,12 +3,16 @@ package com.StickOrDie;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.media.Image;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.games.GamesSignInClient;
@@ -18,6 +22,47 @@ import com.google.android.gms.games.PlayGamesSdk;
 
 public class MainActivity extends AppCompatActivity {
     private MediaPlayer gameStartMusic;
+    private long initTime=0;
+    private int rotateCount = 0;
+    //ImageView characterImage = (ImageView)(findViewById(R.id.imageViewCharacter));
+
+    /*private ImageView rotateImage(ImageView image, int angle) {
+        //return Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true);
+        image.setRotation(image.getRotation() + angle);
+        return image;
+    }
+
+    private boolean secondPassed(){
+        initTime = System.currentTimeMillis();
+        if(System.currentTimeMillis()-initTime > 1000){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    private boolean isEvenNumber(int x){
+        if(x % 2 == 0){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    private void rotateToMusic(){
+        if(secondPassed()){
+            if(isEvenNumber(rotateCount)){
+                rotateImage(characterImage,45);
+                rotateCount++;
+            }
+            else{
+                rotateImage(characterImage,-45);
+                rotateCount++;
+            }
+        }
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,11 +74,10 @@ public class MainActivity extends AppCompatActivity {
         Constants.SCREEN_WIDTH = dm.widthPixels;
         Constants.SCREEN_HEIGHT = dm.heightPixels;
         final int RC_LEADERBOARD_UI = 9004;
-
         setContentView(R.layout.activity_main);
         gameStartMusic = MediaPlayer.create(MainActivity.this, R.raw.startscreenmusic);
+        gameStartMusic.setLooping(true);
         gameStartMusic.start();
-
 
 
 

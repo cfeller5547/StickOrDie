@@ -15,10 +15,8 @@ public class GameOverShield {
 
     public int shieldWidth = (Constants.SCREEN_WIDTH*3) / 4;
     public int shieldX1 = (Constants.SCREEN_WIDTH/2) - (shieldWidth/2);
-    public int shieldX2 = shieldX1+shieldWidth;
     public int shieldHeight = Constants.SCREEN_HEIGHT/2;
     public int shieldY1 = (Constants.SCREEN_HEIGHT/2) - (shieldHeight/2);
-    public int shieldY2 = shieldY1 + shieldHeight;
     private Paint paint;
     private Paint paint2;
     private Paint paint3;
@@ -26,16 +24,16 @@ public class GameOverShield {
     private Bitmap shieldBitmap;
 
     //play again button rect
-    float rect1Leftx = Math.round(Constants.SCREEN_HEIGHT/6.5025); // =400
-    float rect1Topy = Math.round(Constants.SCREEN_HEIGHT/2.0808); // =1250
-    float rect1Rightx = Math.round(Constants.SCREEN_HEIGHT/2.601); // =1000;
-    float rect1Bottomy = Math.round(Constants.SCREEN_HEIGHT/2.477142); // =1050;
+    float rect1Leftx = Math.round(Constants.SCREEN_HEIGHT/6.5025f); // =400
+    float rect1Topy = Math.round(Constants.SCREEN_HEIGHT/2.0808f); // =1250
+    float rect1Rightx = Math.round(Constants.SCREEN_HEIGHT/2.601f); // =1000;
+    float rect1Bottomy = Math.round(Constants.SCREEN_HEIGHT/2.477142f); // =1050;
 
     //main menu button rect
-    float rect2Leftx = Math.round(Constants.SCREEN_HEIGHT/5.78); // =450
-    float rect2Topy = Math.round(Constants.SCREEN_HEIGHT/1.678); // =1550
-    float rect2Rightx = Math.round(Constants.SCREEN_HEIGHT/2.7378); // =950;
-    float rect2Bottomy = Math.round(Constants.SCREEN_HEIGHT/1.7937); // =1450;
+    float rect2Leftx = Math.round(Constants.SCREEN_HEIGHT/5.78f); // =450
+    float rect2Topy = Math.round(Constants.SCREEN_HEIGHT/1.678f); // =1550
+    float rect2Rightx = Math.round(Constants.SCREEN_HEIGHT/2.7378f); // =950;
+    float rect2Bottomy = Math.round(Constants.SCREEN_HEIGHT/1.7937f); // =1450;
     float rect2Height = Math.abs(rect2Topy - rect2Bottomy);
 
     //playagaintext
@@ -52,35 +50,35 @@ public class GameOverShield {
         paint = new Paint();
         paint.setColor(Color.DKGRAY);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
-        paint.setStrokeWidth(100);
+        paint.setStrokeWidth(100f);
 
         paint2 = new Paint();
         paint2.setColor(Color.DKGRAY);
         paint2.setStyle(Paint.Style.FILL_AND_STROKE);
-        paint2.setStrokeWidth(100);
+        paint2.setStrokeWidth(100f);
 
         //playagaintext
         paint3 = new Paint();
         paint3.setColor(Color.WHITE);
         Typeface audioWideFont = ResourcesCompat.getFont(context, R.font.audiowide);
-        paint3.setTextSize(Math.round(Constants.SCREEN_WIDTH/16));
+        paint3.setTextSize(Math.round(Constants.SCREEN_WIDTH/16f));
         paint3.setTypeface(audioWideFont);
 
         //mainmenutext
         paint4 = new Paint();
         paint4.setColor(Color.WHITE);
         audioWideFont = ResourcesCompat.getFont(context, R.font.audiowide);
-        paint4.setTextSize(Math.round(Constants.SCREEN_WIDTH/16));
+        paint4.setTextSize(Math.round(Constants.SCREEN_WIDTH/16f));
         paint4.setTypeface(audioWideFont);
 
         //playagaintext
 
-        playAgainTextYLocation = (rect1Bottomy+rect1Topy) /2;
-        playAgainTextXLocation = ((rect1Leftx+rect1Rightx) /2) - 3*(paint3.getTextSize());
+        playAgainTextYLocation = (rect1Bottomy+rect1Topy) /2f;
+        playAgainTextXLocation = ((rect1Leftx+rect1Rightx) /2f) - 3f*(paint3.getTextSize());
 
         //mainmenutext
-        mainMenuTextYLocation = (rect2Bottomy+rect2Topy) /2;
-        mainMenuTextXLocation = ((rect2Leftx+rect2Rightx)/2)- 3*(paint4.getTextSize());
+        mainMenuTextYLocation = (rect2Bottomy+rect2Topy) /2f;
+        mainMenuTextXLocation = ((rect2Leftx+rect2Rightx)/2f)- 3f*(paint4.getTextSize());
     }
 
     public void draw(Canvas canvas) {
