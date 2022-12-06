@@ -13,8 +13,8 @@ import androidx.core.content.res.ResourcesCompat;
 
 public class GameOverShield {
 
-    public int shieldWidth = (Constants.SCREEN_WIDTH*3) / 4;
-    public int shieldX1 = (Constants.SCREEN_WIDTH/2) - (shieldWidth/2);
+    public int shieldWidth = (Constants.SCREEN_WIDTH*3) / 4; //=1080
+    public int shieldX1 = (Constants.SCREEN_WIDTH/2) - (shieldWidth/2); //=180
     public int shieldHeight = Constants.SCREEN_HEIGHT/2;
     public int shieldY1 = (Constants.SCREEN_HEIGHT/2) - (shieldHeight/2);
     private Paint paint;

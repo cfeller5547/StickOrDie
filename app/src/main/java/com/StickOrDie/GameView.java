@@ -1,7 +1,5 @@
 package com.StickOrDie;
 
-import static com.StickOrDie.GameActivity.gameMusic;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
@@ -54,6 +53,7 @@ public class GameView extends View {
     private Runnable r;
     private int screenX, screenY;
     public static float screenRatioX, screenRatioY;
+    static MediaPlayer gameMusic;
     private int platformCollisionIndex;
     private boolean playerJumpedAndCollided = false;
     private boolean playerStartedMovingLeft = false;
@@ -84,6 +84,8 @@ public class GameView extends View {
         super(context);
         sound = new SoundPlayer(this.getContext());
         paint = new Paint();
+        gameMusic = MediaPlayer.create(this.getContext(), R.raw.growingonme);
+        gameMusic.start();
         Typeface audioWideFont = ResourcesCompat.getFont(context, R.font.audiowide);
         paint.setTextSize(Math.round(Constants.SCREEN_WIDTH/8.4375));
         paint.setTypeface(audioWideFont);
