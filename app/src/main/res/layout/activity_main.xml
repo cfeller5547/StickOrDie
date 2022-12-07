@@ -3,101 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/framelayout"
     tools:context=".MainActivity">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="@dimen/_16sdp"
-        android:layout_height="@dimen/_150sdp"
-        android:layout_below="@id/plat5"
-        android:layout_alignTop="@id/play"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="@dimen/_25sdp"
-        android:layout_marginTop="@dimen/_301sdp"
-        android:scaleType="fitXY"
-        android:src="@drawable/spikedplatform" />
 
     <ImageView
         android:id="@+id/leaderboards"
-        android:layout_width="@dimen/_120sdp"
-        android:layout_height="@dimen/_120sdp"
+        android:layout_width="@dimen/_200sdp"
+        android:layout_height="@dimen/_200sdp"
         android:layout_above="@id/music_credit"
-        android:src="@drawable/leaderboard"
-        android:translationX="@dimen/_9ssp"
-        android:translationY="@dimen/_30sdp" />
-
-    <ImageView
-        android:id="@+id/imageViewCharacter"
-        android:layout_width="@dimen/_53sdp"
-        android:layout_height="@dimen/_54sdp"
-        android:layout_centerInParent="true"
-        android:scaleType="fitXY"
-        android:src="@drawable/character"
-        android:translationY="@dimen/_80sdp" />
-
-
-    <ImageView
-        android:id="@+id/plat1"
-        android:layout_width="@dimen/_16sdp"
-        android:layout_height="@dimen/_133sdp"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/title"
-        android:layout_marginStart="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_20sdp"
-        android:scaleType="fitXY"
-        android:src="@drawable/spikedplatform" />
-
-    <ImageView
-        android:id="@+id/plat3"
-        android:layout_width="@dimen/_16sdp"
-        android:layout_height="@dimen/_80sdp"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="@dimen/_254sdp"
-        android:layout_marginTop="@dimen/_396sdp"
-        android:scaleType="fitXY"
-        android:src="@drawable/spikedplatform" />
-
-    <ImageView
-        android:id="@+id/plat5"
-        android:layout_width="@dimen/_16sdp"
-        android:layout_height="@dimen/_160sdp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="@dimen/_242sdp"
-        android:layout_marginTop="@dimen/_141sdp"
-        android:scaleType="fitXY"
-        android:src="@drawable/spikedplatform" />
-
-    <ImageView
-        android:id="@+id/imageView7"
-        android:layout_width="@dimen/_16sdp"
-        android:layout_height="@dimen/_67sdp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="@dimen/_113sdp"
-        android:layout_marginTop="@dimen/_170sdp"
-        android:scaleType="fitXY"
-        android:src="@drawable/spikedplatform"  />
-
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_alignParentTop="true"
-        android:fontFamily="@font/audiowide"
-        android:text="Stick or Die"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="#000000"
-        android:textSize="@dimen/_36ssp"
-        android:translationY="@dimen/_10sdp"
+        android:src="@drawable/leaderboards2"
+        android:layout_alignParentLeft="true"
+        android:translationX="@dimen/_minus35sdp"
          />
 
     <TextView
@@ -110,18 +27,15 @@
         android:layout_centerInParent="true"
         android:textSize="@dimen/_15ssp" />
 
-    <TextView
+    <ImageView
         android:id="@+id/play"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/playbutton"
+        android:layout_width="@dimen/_150sdp"
+        android:layout_height="@dimen/_150sdp"
+        android:layout_centerInParent="true"
         android:layout_centerHorizontal="true"
-        android:layout_above="@id/imageViewCharacter"
-        android:fontFamily="@font/audiowide"
-        android:text="Play"
-        android:textColor="#000000"
-        android:textSize="@dimen/_47ssp"
-        android:translationY="@dimen/_minus60sdp" />
+    />
 
 
 

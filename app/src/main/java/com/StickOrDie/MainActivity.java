@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
                     if (isAuthenticated) {
                         Toast.makeText(MainActivity.this, "Succesful!", Toast.LENGTH_SHORT).show();
 
+
                     } else {
                         Toast.makeText(MainActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
                         Log.e("Connection", "Unable to connect", isAuthenticatedTask.getException());

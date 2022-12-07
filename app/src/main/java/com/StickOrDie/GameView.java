@@ -95,7 +95,7 @@ public class GameView extends View {
         paint2.setTypeface(audioWideFont);
         paint2.setColor(getResources().getColor(R.color.grey_light));
         paint3 = new Paint();
-        paint3.setTextSize(Math.round(Constants.SCREEN_WIDTH/16));
+        paint3.setTextSize(Math.round(Constants.SCREEN_WIDTH/20));
         paint3.setTypeface(audioWideFont);
         paint3.setColor(getResources().getColor(R.color.black));
         paint3.setTextAlign(Paint.Align.CENTER);
@@ -234,7 +234,7 @@ public class GameView extends View {
                         gameActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         getContext().startActivity(gameActivityIntent);
                     }
-                    //player clicked inside play again rectangle box, taking to start activity
+                    //player clicked inside main menu rectangle box, taking to start activity
                     if(this.insideBoxInterval(event.getX(), gameOverShield.rect2Leftx, gameOverShield.rect2Rightx)&&
                             this.insideBoxInterval(event.getY(), gameOverShield.rect2Bottomy,gameOverShield.rect2Topy)){
                         Intent MainActivityIntent = new Intent(getContext(), MainActivity.class);
