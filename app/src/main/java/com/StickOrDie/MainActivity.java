@@ -1,7 +1,12 @@
 package com.StickOrDie;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -15,15 +20,28 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.GamesSignInClient;
 import com.google.android.gms.games.PlayGames;
 import com.google.android.gms.games.PlayGamesSdk;
+import com.google.android.gms.tasks.OnSuccessListener;
+
 
 
 public class MainActivity extends AppCompatActivity {
     private MediaPlayer gameStartMusic;
     private long initTime=0;
     private int rotateCount = 0;
+    private final int RC_LEADERBOARD_UI = 9004;
+
+    ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+            if(result.getResultCode() == Activity.RESULT_OK){
+                Intent data = result.getData();
+            }
+        }
+    });
     //ImageView characterImage = (ImageView)(findViewById(R.id.imageViewCharacter));
 
     /*private ImageView rotateImage(ImageView image, int angle) {
@@ -73,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
         this.getWindowManager().getDefaultDisplay().getMetrics(dm);
         Constants.SCREEN_WIDTH = dm.widthPixels;
         Constants.SCREEN_HEIGHT = dm.heightPixels;
-        final int RC_LEADERBOARD_UI = 9004;
         setContentView(R.layout.activity_main);
         gameStartMusic = MediaPlayer.create(MainActivity.this, R.raw.startscreenmusic);
         gameStartMusic.setLooping(true);
@@ -100,9 +117,8 @@ public class MainActivity extends AppCompatActivity {
                                     isAuthenticatedTask.getResult().isAuthenticated());
 
                     if (isAuthenticated) {
-                        Toast.makeText(MainActivity.this, "Succesful!", Toast.LENGTH_SHORT).show();
-
-
+                        Toast.makeText(MainActivity.this, "Succesful!", Toast.LENGTH_SHORT).show(); //google play sign in successful
+                        showLeaderboard();
                     } else {
                         Toast.makeText(MainActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
                         Log.e("Connection", "Unable to connect", isAuthenticatedTask.getException());
@@ -111,5 +127,17 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    private void showLeaderboard(){
+        PlayGames.getLeaderboardsClient(MainActivity.this)
+                .getLeaderboardIntent(getString(R.string.leaderboard_id))
+                .addOnSuccessListener(new OnSuccessListener<Intent>() {
+                    @Override
+                    @SuppressWarnings("deprecation")
+                    public void onSuccess(Intent intent) {
+                        startActivityForResult(intent, RC_LEADERBOARD_UI);
+                    }
+                });
     }
 }
