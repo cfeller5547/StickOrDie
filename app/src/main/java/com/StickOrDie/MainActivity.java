@@ -22,8 +22,12 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.GamesSignInClient;
+import com.google.android.gms.games.LeaderboardsClient;
 import com.google.android.gms.games.PlayGames;
 import com.google.android.gms.games.PlayGamesSdk;
+import com.google.android.gms.games.leaderboard.Leaderboard;
+import com.google.android.gms.games.leaderboard.LeaderboardScore;
+import com.google.android.gms.games.leaderboard.LeaderboardScoreBuffer;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 
@@ -33,15 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private long initTime=0;
     private int rotateCount = 0;
     private final int RC_LEADERBOARD_UI = 9004;
-
-    ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-        @Override
-        public void onActivityResult(ActivityResult result) {
-            if(result.getResultCode() == Activity.RESULT_OK){
-                Intent data = result.getData();
-            }
-        }
-    });
+    private int score = 0;
     //ImageView characterImage = (ImageView)(findViewById(R.id.imageViewCharacter));
 
     /*private ImageView rotateImage(ImageView image, int angle) {
@@ -85,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        score = getIntent().getIntExtra("SCORE", 0);
         PlayGamesSdk.initialize(this);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         DisplayMetrics dm = new DisplayMetrics();
@@ -140,4 +137,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    private void addScores(){
+        if(PlayGames.getLeaderboardsClient(MainActivity.this).getLeaderboardIntent(getString(R.string.leaderboard_id))!=null){
+            
+        }
+    }
+
 }

@@ -235,6 +235,7 @@ public class GameView extends View {
                     if(this.insideBoxInterval(event.getX(), gameOverShield.rect1Leftx, gameOverShield.rect1Rightx)&&
                             this.insideBoxInterval(event.getY(), gameOverShield.rect1Bottomy,gameOverShield.rect1Topy)){
                         Intent gameActivityIntent = new Intent(getContext(), GameActivity.class);
+                        gameActivityIntent.putExtra("score", score);
                         gameActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         getContext().startActivity(gameActivityIntent);
                     }
@@ -242,6 +243,7 @@ public class GameView extends View {
                     if(this.insideBoxInterval(event.getX(), gameOverShield.rect2Leftx, gameOverShield.rect2Rightx)&&
                             this.insideBoxInterval(event.getY(), gameOverShield.rect2Bottomy,gameOverShield.rect2Topy)){
                         Intent MainActivityIntent = new Intent(getContext(), MainActivity.class);
+                        MainActivityIntent.putExtra("score", score); //adding score to the mainactivity to retrieve
                         MainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         getContext().startActivity(MainActivityIntent);
                     }
