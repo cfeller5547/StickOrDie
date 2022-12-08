@@ -1,5 +1,7 @@
 package com.StickOrDie;
 
+import static com.StickOrDie.GameActivity.gameMusic;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.graphics.Canvas;
 
 import androidx.core.content.res.ResourcesCompat;
+
 
 import java.util.Random;
 
@@ -44,6 +47,7 @@ public class GameView extends View {
     private boolean phase6ChangeSoundInit = false;
     private boolean phase7ChangeSoundInit = false;
     private boolean playerUnderSpikesSoundInit = false;
+    private boolean gameMusicStopInit = false;
     private Random random;
     private Paint paint, paint2, paint3;
     private Bitmap bm;
@@ -53,7 +57,6 @@ public class GameView extends View {
     private Runnable r;
     private int screenX, screenY;
     public static float screenRatioX, screenRatioY;
-    static MediaPlayer gameMusic;
     private int platformCollisionIndex;
     private boolean playerJumpedAndCollided = false;
     private boolean playerStartedMovingLeft = false;
@@ -84,8 +87,6 @@ public class GameView extends View {
         super(context);
         sound = new SoundPlayer(this.getContext());
         paint = new Paint();
-        gameMusic = MediaPlayer.create(this.getContext(), R.raw.growingonme);
-        gameMusic.start();
         Typeface audioWideFont = ResourcesCompat.getFont(context, R.font.audiowide);
         paint.setTextSize(Math.round(Constants.SCREEN_WIDTH/8.4375));
         paint.setTypeface(audioWideFont);
@@ -189,7 +190,10 @@ public class GameView extends View {
         if(isGameOver){
             //if(System.currentTimeMillis()-currentGameOverTime > 3000) { //3 seconds passed since death occurred
                 gameOverShield.draw(canvas);
-                gameMusic.stop();
+                if(gameMusicStopInit == false) {
+                    gameMusic.stop();
+                    gameMusicStopInit = true;
+                }
                 canvas.drawText("Score: " + score, Constants.SCREEN_WIDTH/2, gameOverShield.mainMenuTextYLocation + (gameOverShield.rect2Height*2), paint3);
             //}
         }
