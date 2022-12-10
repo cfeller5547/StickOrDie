@@ -3,7 +3,7 @@
 
 
 
-Simple 2D hypercausal Infinite Runner game created with android studio involving a character jumping from walls spawning with spikes that increase speed progressively
+Simple 2D hypercasual Infinite Runner game created with android studio involving a character jumping from walls spawning with spikes that increase speed progressively
 
 Live Link: https://play.google.com/store/apps/details?id=com.StickOrDie
 
