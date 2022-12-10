@@ -10,8 +10,8 @@ android {
         applicationId 'com.StickOrDie'
         minSdk 21
         targetSdk 32
-        versionCode 13
-        versionName "2.2"
+        versionCode 17
+        versionName "2.6"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

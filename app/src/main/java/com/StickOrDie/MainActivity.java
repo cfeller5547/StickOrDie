@@ -5,6 +5,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -20,15 +21,18 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.games.GamesSignInClient;
 import com.google.android.gms.games.LeaderboardsClient;
 import com.google.android.gms.games.PlayGames;
 import com.google.android.gms.games.PlayGamesSdk;
+import com.google.android.gms.games.PlayersClient;
 import com.google.android.gms.games.leaderboard.Leaderboard;
 import com.google.android.gms.games.leaderboard.LeaderboardScore;
 import com.google.android.gms.games.leaderboard.LeaderboardScoreBuffer;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 
 
@@ -37,51 +41,16 @@ public class MainActivity extends AppCompatActivity {
     private long initTime=0;
     private int rotateCount = 0;
     private final int RC_LEADERBOARD_UI = 9004;
-    private int score = 0;
-    //ImageView characterImage = (ImageView)(findViewById(R.id.imageViewCharacter));
+    GamesSignInClient gamesSignInClient;
+    boolean isAuthenticated = false;
+    private PlayersClient playersClient;
+    public String playerID = "";
 
-    /*private ImageView rotateImage(ImageView image, int angle) {
-        //return Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, true);
-        image.setRotation(image.getRotation() + angle);
-        return image;
-    }
-
-    private boolean secondPassed(){
-        initTime = System.currentTimeMillis();
-        if(System.currentTimeMillis()-initTime > 1000){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-
-    private boolean isEvenNumber(int x){
-        if(x % 2 == 0){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
-
-    private void rotateToMusic(){
-        if(secondPassed()){
-            if(isEvenNumber(rotateCount)){
-                rotateImage(characterImage,45);
-                rotateCount++;
-            }
-            else{
-                rotateImage(characterImage,-45);
-                rotateCount++;
-            }
-        }
-    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        score = getIntent().getIntExtra("SCORE", 0);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         PlayGamesSdk.initialize(this);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         DisplayMetrics dm = new DisplayMetrics();
@@ -92,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
         gameStartMusic = MediaPlayer.create(MainActivity.this, R.raw.startscreenmusic);
         gameStartMusic.setLooping(true);
         gameStartMusic.start();
-
 
 
         findViewById(R.id.play).setOnClickListener(new View.OnClickListener() {
@@ -106,15 +74,19 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.leaderboards).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GamesSignInClient gamesSignInClient = PlayGames.getGamesSignInClient(MainActivity.this);
+                gamesSignInClient = PlayGames.getGamesSignInClient(MainActivity.this);
 
                 gamesSignInClient.isAuthenticated().addOnCompleteListener(isAuthenticatedTask -> {
-                    boolean isAuthenticated =
+                    isAuthenticated =
                             (isAuthenticatedTask.isSuccessful() &&
                                     isAuthenticatedTask.getResult().isAuthenticated());
 
-                    if (isAuthenticated) {
+                    if (isAuthenticated) { //we verified that the user signed in
                         Toast.makeText(MainActivity.this, "Succesful!", Toast.LENGTH_SHORT).show(); //google play sign in successful
+                        PlayGames.getPlayersClient(MainActivity.this).getCurrentPlayer().addOnCompleteListener(mTask -> {
+                                    playerID = mTask.getResult().getPlayerId(); //gettingplayerID to identify user
+                                }
+                        );
                         showLeaderboard();
                     } else {
                         Toast.makeText(MainActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
@@ -138,10 +110,13 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    private void addScores(){
-        if(PlayGames.getLeaderboardsClient(MainActivity.this).getLeaderboardIntent(getString(R.string.leaderboard_id))!=null){
-            
+    public void addScores(int score){
+        try {
+            PlayGames.getLeaderboardsClient(MainActivity.this).submitScore(getString(R.string.leaderboard_id), score);
+        }catch(Exception e){
+            e.printStackTrace();
         }
+
     }
 
 }

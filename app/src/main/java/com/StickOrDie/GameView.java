@@ -19,11 +19,15 @@ import android.graphics.Canvas;
 import androidx.core.content.res.ResourcesCompat;
 
 
+import com.google.android.gms.games.LeaderboardsClient;
+import com.google.android.gms.games.PlayGames;
+
 import java.util.Random;
 
 
 public class GameView extends View {
     private Character character;
+    MainActivity mainActivity;
     private PlatformCollection platformCollection;
     private SoundPlayer sound;
     private long currentGameOverTime = 0;
@@ -81,10 +85,15 @@ public class GameView extends View {
     private Character characterTopLeftPiece;
     private Character characterTopRightPiece;
     int boundArr[];
+    String leaderboard_id;
+    LeaderboardsClient leaderboardsClient;
 
 
     public GameView(Context context, int screenX, int screenY) {
         super(context);
+        leaderboard_id = context.getString(R.string.leaderboard_id);
+        leaderboardsClient = PlayGames.getLeaderboardsClient(mainActivity);
+        mainActivity = new MainActivity();
         sound = new SoundPlayer(this.getContext());
         paint = new Paint();
         Typeface audioWideFont = ResourcesCompat.getFont(context, R.font.audiowide);
@@ -194,7 +203,7 @@ public class GameView extends View {
                     gameMusic.stop();
                     gameMusicStopInit = true;
                 }
-                canvas.drawText("Score: " + score, Constants.SCREEN_WIDTH/2, gameOverShield.mainMenuTextYLocation + (gameOverShield.rect2Height*2), paint3);
+                canvas.drawText("Score: " + score, Constants.SCREEN_WIDTH/2, (Constants.SCREEN_HEIGHT*3)/4, paint3);
             //}
         }
     }
@@ -233,17 +242,15 @@ public class GameView extends View {
                 if(isGameOver){
                     //player clicked inside play again rectangle box, restarting game activity
                     if(this.insideBoxInterval(event.getX(), gameOverShield.rect1Leftx, gameOverShield.rect1Rightx)&&
-                            this.insideBoxInterval(event.getY(), gameOverShield.rect1Bottomy,gameOverShield.rect1Topy)){
+                            this.insideBoxInterval(event.getY(), gameOverShield.rect1Bottomy,gameOverShield.rect1TopY)){
                         Intent gameActivityIntent = new Intent(getContext(), GameActivity.class);
-                        gameActivityIntent.putExtra("score", score);
                         gameActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         getContext().startActivity(gameActivityIntent);
                     }
                     //player clicked inside main menu rectangle box, taking to start activity
                     if(this.insideBoxInterval(event.getX(), gameOverShield.rect2Leftx, gameOverShield.rect2Rightx)&&
-                            this.insideBoxInterval(event.getY(), gameOverShield.rect2Bottomy,gameOverShield.rect2Topy)){
+                            this.insideBoxInterval2(event.getY(), gameOverShield.rect2Bottomy,gameOverShield.rect2Topy)){
                         Intent MainActivityIntent = new Intent(getContext(), MainActivity.class);
-                        MainActivityIntent.putExtra("score", score); //adding score to the mainactivity to retrieve
                         MainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         getContext().startActivity(MainActivityIntent);
                     }
@@ -350,21 +357,16 @@ public class GameView extends View {
         characterTopRightPiece.setMoveY(characterTopRightPiece.getSpeed());
     }
 
-    /*private void setCharSpikeCollisionDeathInterval(int characterLeftXDeathLocation, int characterRightXDeathLocation){
-        int leftBound = characterLeftXDeathLocation - 5;
-        int rightBound = characterRightXDeathLocation + 5;
-        boundArr[0] = leftBound;
-        boundArr[1] = rightBound;
-    }*/
-
-    /*int[] getCharSpikeCollisionDeathInterval(){
-        return boundArr;
-    }*/
-
     public void gameOver(){
         if(isGameOver == false) {
             currentGameOverTime = System.currentTimeMillis();
             timer.stopTimer();
+            try {
+                leaderboardsClient.submitScore(leaderboard_id, score);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
         }
         isGameOver = true;
     }
@@ -378,6 +380,15 @@ public class GameView extends View {
 
     private boolean insideBoxInterval(float eventGetXLocation, float x1Location, float x2Location){
         if (eventGetXLocation > x1Location && eventGetXLocation < x2Location){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    private boolean insideBoxInterval2(float eventGetXLocation, float x1Location, float x2Location){
+        if (eventGetXLocation > x2Location && eventGetXLocation < x1Location){
             return true;
         }
         else{
