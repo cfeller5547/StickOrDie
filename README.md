@@ -7,5 +7,4 @@ Simple 2D hypercasual Infinite Runner game created with android studio involving
 
 Live Link: https://play.google.com/store/apps/details?id=com.StickOrDie
 
-![githubpic]([[https://user-images.githubusercontent.com/114957404/206835231-56fae02e-6f3b-4322-af27-0882f52b0803.png](https://user-images.githubusercontent.com/114957404/206835266-6b6ccc50-04f1-4b90-bd60-1e576b9f7ac8.png)](https://user-images.githubusercontent.com/114957404/206835266-6b6ccc50-04f1-4b90-bd60-1e576b9f7ac8.png))
-
+![playstorescreenshot](https://user-images.githubusercontent.com/114957404/206835296-852fa771-1c52-4da5-95a1-ebe1ca921c40.png)
